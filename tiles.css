@@ -1,0 +1,130 @@
+.tile {
+    background-color: #ddd;
+    border: 1px dashed #000;
+    float: left;
+    margin: 10px;
+    position: relative;
+}
+
+.tile.flipped {
+    -webkit-transform:scaleX(-1);
+    -ms-transform:scale(-1,1);
+    transform:scaleX(-1);
+}
+
+
+/** TILE_X_Y
+         x
+     _________
+    |         |
+ y  |   TILE  |
+    |         |
+    |_________|
+
+Screen is 8 wide.
+**/
+
+.tile_1x4 {
+    width: 150px;
+    height: 600px;
+}
+
+.tile_2x2 {
+    width: 300px;
+    height: 300px;
+}
+
+.tile_3x1 {
+    width: 450px;
+    height: 150px;
+}
+
+.tile_3x2 {
+    width: 450px;
+    height: 300px;
+}
+
+.tile_4x3 {
+    width: 600px;
+    height: 450px;
+}
+
+.front, .back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.back .contents {
+    top: 25px;
+}
+
+.contents {
+    position: absolute;
+    z-index:50;
+}
+
+.front, .back, .tile {
+    -webkit-transition: -webkit-transform .75s linear;
+    transition: transform .75s linear;
+}
+
+.back {
+    display: none;
+    -webkit-transform:scaleX(-1);
+    -ms-transform:scale(-1,1);
+    transform:scaleX(-1);
+}
+
+.flipped.back {
+    display: block;
+    z-index:100;
+    background-color: #ddd;
+}
+
+.filter {
+    display: none;
+}
+
+.filters .settings {
+    display: none;
+}
+
+.filters .filter {
+    display: block;
+}
+
+.pull-right {
+    float: right;
+}
+
+.setting_span {
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    z-index:100;
+}
+
+.setting_btn {
+    display: none;
+}
+
+.visible {
+    display: inline !important;
+}
+
+.garbage {
+    position: fixed;
+    bottom: 0px;
+    left: 47%;
+    height: 20px;
+    padding: 20px;
+    background-color: #ffcc33;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: none;
+}
+
+#tileable {
+    overflow:hidden;
+}
