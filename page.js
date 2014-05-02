@@ -168,8 +168,6 @@ function groups() {
             groups.groupList[id].tiles[iter] = new tile(id, iter, tiles[iter].x, tiles[iter].y);
     };
     this.removeTile = function(id, tile) {
-
-        console.log(groups.groupList[id].tiles[tile]);
         $('#'+groups.groupList[id].tiles[tile].id).remove();
         delete groups.groupList[id].tiles[tile];
     };
@@ -203,6 +201,7 @@ function tile(parent, id, x, y) {
         snap: ".tile",
         snapMode: 'outer',
         containment: "#tileable",
+        handle: '.setting_span',
     });
 
     $('#'+this.id).on('dragstart', function(e, ui) { //moving tile around
@@ -215,7 +214,6 @@ function tile(parent, id, x, y) {
         var trash = $('.garbage');
         if (mouseX >= trash.offset().left && mouseX <= trash.offset().left + trash.outerWidth() &&
             mouseY >= trash.offset().top && mouseY <= trash.offset().top + trash.outerHeight()) {
-            console.log(that.parent, that.id);
             groups.removeTile(that.parent, that.id);
         }
 
@@ -223,11 +221,69 @@ function tile(parent, id, x, y) {
         groups.dragging = false;
     });
 
+    $('#'+this.id).on('click', '.save_btn', function() {
+        $(this).closest('.back').find('.contents').children().each(function() {
+            var which = 'settings';
+            if ($(this).hasClass('settings'))
+                which = 'settings';
+            else if ($(this).hasClass('filter'))
+                which = 'filters';
+            $(this).children().each(function() {
+                var value = false;
+                var found = false;
+                //grab each setting
+                if ($(this).context.localName == 'input') {
+                    switch($(this).attr('type')) {
+                        case 'checkbox':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'radio':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'text':
+                        case 'number':
+                        case 'range':
+                        case 'input':
+                            if($(this).val() != '')
+                                value = $(this).val();
+                        break;
+                    }
+                    found = true;
+                }
+                else if ($(this).context.localName == 'textarea') {
+                    if($(this).val() != '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                else if ($(this).context.localName == 'select') {
+                    if($(this).val() != '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                if (found) {
+                    if (which == 'settings')
+                        that.settings[$(this).attr('setFilt')] = value;
+                    else
+                        that.filters[$(this).attr('setFilt')] = value;
+                }
+            });
+        });
+        that.drawChart();
+    });
+
     this.addFilters = function(filters) {
         this.filters = filters;
     };
 
-    this.settings = function(settings) {
+    this.addSettings = function(settings) {
         this.settings = settings;
     };
 
@@ -237,12 +293,11 @@ function tile(parent, id, x, y) {
 
     this.generate = function(options, settings, filters) {
         var stuff = {};
-
         if("data" in options) {
             stuff.data = {columns: options.data};
         }
-        if("legend" in options) {
-            stuff.legend = {show: options.legend};
+        if("legend" in settings) {
+            stuff.legend = {show: settings.legend};
         }
         if("size" in options) {
             stuff.size = {width: options.size[0], height: options.size[1]};
@@ -250,40 +305,46 @@ function tile(parent, id, x, y) {
         if("bindto" in options) {
             stuff.bindto = options.bindto;
         }
-        if("type" in options) {
-            stuff.data.type = options.type;
+        if("type" in settings) {
+            stuff.data.type = settings.type;
         }
-        if("subchart" in options) {
-            stuff.subchart = {show: options.subchart};
+        if("subchart" in settings) {
+            stuff.subchart = {show: settings.subchart};
         }
-        if("zoom" in options) {
-            stuff.zoom = {enabled: options.zoom};
+        if("zoom" in settings) {
+            stuff.zoom = {enabled: settings.zoom};
         }
-        if("min" in options && "max" in options) {
+        if("min" in filters && "max" in filters) {
             stuff.axis = {
                 y: {
-                    max: parseInt(options.max),
-                    min: parseInt(options.min),
+                    max: parseInt(filters.max),
+                    min: parseInt(filters.min),
                 }
             };
         }
         stuff.data.groups = [['data1', 'data2']];
-
-        console.log(stuff);
         chart = c3.generate(stuff);
     };
 
     this.drawChart = function() {
         var settings = groups.groupList[parent].settings;
         var filters = groups.groupList[parent].filters;
-
         var chart1 = {};
         chart1.bindto = '#'+id+' > .front > .contents';
         chart1.type = 'area';
         chart1.size = [150 * this.size[0], 150 * this.size[1]];
         chart1.data = groups.groupList[parent].data;
-        this.generate(chart1, settings, filters);
+        this.generate(chart1, mergeObjects(this.settings, settings), mergeObjects(this.filters, filters));
     };
+}
+
+//merge Objects, tile > group precendance
+function mergeObjects(tileObj, groupObj) {
+    if (groupObj == undefined)
+        groupObj = {};
+    for(var iter in tileObj)
+        groupObj[iter] = tileObj[iter];
+    return groupObj;
 }
 
 function addTrash(surface) {
@@ -325,8 +386,10 @@ var data = [
 
 $( document ).ready(function() {
     surface = $('#tileable');
+
     addTrash(surface);
     makeSize(surface);
+
     groups = new groups();
     page = new page();
     
@@ -348,6 +411,38 @@ $(window).resize(function(){
     page.midWidth = (page.width/2) - 200;
     page.midHeight = (page.height/2) - 200; 
 });
+
+/*var system = require('system');
+
+// Web Address (URL) of the page to capture
+var url  = system.args[1];
+
+// File name of the captured image
+var file = system.args[2]  + ".png";
+
+var page = require('webpage').create();
+
+// Browser size - height and width in pixels
+// Change the viewport to 480x320 to emulate the iPhone
+page.viewportSize = { width: 1200, height : 800 };
+
+// Set the User Agent String
+// You can change it to iPad or Android for mobile screenshots
+page.settings.userAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5";
+
+// Render the screenshot image
+page.open ( url, function ( status ) {
+  if ( status !== "success") {
+       console.log("Could not open web page : " + url);
+       phantom.exit();
+   } else {
+       window.setTimeout ( function() {
+          page.render(file);
+          console.log("Download the screenshot : " + file);
+          phantom.exit();
+       }, 1000);
+   }
+});*/
 
 /*var chart = null;
 $( document ).ready(function() {

@@ -11,7 +11,7 @@
     </div>
     <div class='contents'>
         <div class='settings'>
-            <select class='type'>
+            <select setFilt='type' class='type'>
                 <option value='pie'>Pie Chart</option>
                 <option value='line' selected>Line Chart</option>
                 <option value='spline'>Spline Chart</option>
@@ -20,15 +20,13 @@
                 <option value='area'>Area Chart</option>
                 <option value='donut'>Donut Chart</option>
             </select><br />
-            <input class='range' type='checkbox' value='range'>Display Ranger?</input><br />
-            <input class='legend' type='checkbox' value='legend'>Display Legend?</input><br />
-            <input class='zoom' type='checkbox' value='zoom'>Zoom Chart?</input><br />
-            Min: <input class='min' type='input' /><br />
-            Max: <input class='max' type='input' /><br />
+            <input setFilt='subchart' class='subchart' type='checkbox' value='range'>Display Ranger?</input><br />
+            <input setFilt='legend' class='legend' type='checkbox' value='legend'>Display Legend?</input><br />
+            <input setFilt='zoom' class='zoom' type='checkbox' value='zoom'>Zoom Chart?</input><br />
         </div>
         <div class='filter'>
-            Min: <input class='min' type='input' /><br />
-            Max: <input class='max' type='input' /><br />
+            Min: <input setFilt='min' class='min' type='input' /><br />
+            Max: <input setFilt='max' class='max' type='input' /><br />
         </div>
     </div>
 </div>
