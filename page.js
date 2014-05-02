@@ -1,7 +1,151 @@
 /* Groups Storage Object */
 
+function page() {
+
+    this.groups;
+    this.surface;
+    this.mouseX;
+    this.mouseY;
+    this.notifBool = false;
+    this.notifExpanded = false;
+    this.tileBool  = false;
+    this.dashBool  = false;
+    this.width = $(window).width();
+    this.height = $(window).height();
+    this.midWidth = (this.width/2) - 200;
+    this.midHeight = (this.height/2) - 200;
+    var that = this;
+
+    this.showNotifBar = function() {
+        if(!that.notifBool)
+        {
+            that.notifBool = true;
+            $('.notifBar').animate({
+                top: 0
+            }, 200, function(){
+                that.notifBool = false;
+            });
+        }
+    };
+    this.hideNotifBar = function() {
+        if(!that.notifBool)
+        {
+            that.notifBool = true;
+            $('.notifBar').animate({
+                top: -60
+            }, 200, function(){
+                that.notifBool = false;
+            });
+        }
+    };
+    this.expandNotifBar = function() {
+        if(!that.notifBool)
+        {
+            that.notifBool = true;
+            that.notifExpanded = true;
+            $("#notifExpand").css('display', 'none');
+            $("#notifCollapse").css('display', 'block');
+            $('.notifBar').animate({
+                height: 500
+            }, 200, function(){
+                that.notifBool = false;
+            });
+        }
+    };
+    this.collapseNotifBar = function() {
+        if(!that.notifBool)
+        {
+            that.notifBool = true;
+            that.notifExpanded = false;
+            $("#notifCollapse").css('display', 'none');
+            $("#notifExpand").css('display', 'block');
+            $('.notifBar').animate({
+                height: 50
+            }, 200, function(){
+                that.notifBool = false;
+            });
+        }
+    };
+
+    this.showTileDock = function() {
+        if(!that.tileBool)
+        {
+            that.tileBool = true
+            $('.tileDock').animate({
+                left: 0
+            }, 250, function(){
+                that.tileBool = false;
+            });
+        }
+    };
+    this.hideTileDock = function() {
+        if(!that.tileBool)
+        {
+            that.tileBool = true;
+            $('.tileDock').animate({
+                left: -310
+            }, function(){
+                that.tileBool = false;
+            });
+        }
+    };
+
+    this.showDashDock = function() {
+        if(!that.dashBool)
+        {
+            that.dashBool = true;
+            $('.dashDock').animate({
+                bottom: 0
+            }, 200, function(){
+                that.dashBool = false;
+            });
+        }
+    };
+    this.hideDashDock = function() {
+        if(!that.dashBool)
+        {
+            that.dashBool = true;
+            $('.dashDock').animate({
+                bottom: -85
+            }, function(){
+                that.dashBool = false;
+            });
+        }
+    };
+
+    $('div.notifBar').on("mouseleave", function() {
+        setTimeout(function(){
+            if(!that.notifExpanded)
+                that.hideNotifBar();
+        }, 1000);
+    });
+    $('div.tileDock').on("mouseleave", function() {
+        setTimeout(function(){
+            that.hideTileDock();
+        }, 1000);
+    });
+    $('div.dashDock').on("mouseleave", function() {
+        setTimeout(function(){
+            that.hideDashDock();
+        }, 1000);
+    });
+
+    $('#notifExpand').click(function(){
+        that.expandNotifBar();
+    });
+    $('#notifCollapse').click(function(){
+        that.collapseNotifBar();
+    });
+
+}
+
+
+
+var page;
+
 function groups() {
     this.groupList = {};
+    this.dragging = false;
 
     this.add = function(id) {
         groups.groupList[id] = {tiles: {}};
@@ -63,6 +207,7 @@ function tile(parent, id, x, y) {
 
     $('#'+this.id).on('dragstart', function(e, ui) { //moving tile around
         $('.garbage').addClass('visible');
+        groups.dragging = true;
     });
 
     $('#'+this.id).on('dragstop', function(e, ui) { //moving tile around
@@ -75,6 +220,7 @@ function tile(parent, id, x, y) {
         }
 
         $('.garbage').removeClass('visible');
+        groups.dragging = false;
     });
 
     this.addFilters = function(filters) {
@@ -152,14 +298,25 @@ function makeSize(surface) {
 }
 
 $(document).on('mousemove', function(e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    page.mouseX = e.clientX;
+    page.mouseY = e.clientY;
+
+    if(page.mouseX > page.midWidth && page.mouseX < page.midWidth + 400)
+    {
+        if(page.mouseY > page.height - 75)
+            page.showDashDock();
+
+        if(page.mouseY <= 50)
+            page.showNotifBar();
+    }
+    
+    if(page.mouseY > page.midHeight && page.mouseY < page.midHeight + 400)
+    {
+        if(page.mouseX <= 75)
+            page.showTileDock();
+    }
 });
 
-var groups;
-var surface;
-var mouseX;
-var mouseY;
 
 var data = [
     ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
@@ -171,6 +328,8 @@ $( document ).ready(function() {
     addTrash(surface);
     makeSize(surface);
     groups = new groups();
+    page = new page();
+    
 
     groups.add('first');
     groups.addData('first', data);
@@ -179,9 +338,16 @@ $( document ).ready(function() {
     groups.add('second');
     groups.addData('second', data);
     groups.addTiles('first', {'tile2': {x:2, y:2}});
+
+    
 });
 
-
+$(window).resize(function(){
+    page.width = $(window).width();
+    page.height = $(window).height();
+    page.midWidth = (page.width/2) - 200;
+    page.midHeight = (page.height/2) - 200; 
+});
 
 /*var chart = null;
 $( document ).ready(function() {
