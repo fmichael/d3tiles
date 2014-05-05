@@ -530,7 +530,7 @@ $(document).ready(function() {
         pages.changeToPage('page_'+counter);
         pages.pageList['page_'+counter].addGroup('group_'+counter);
         pages.pageList['page_'+counter].groupList['group_'+counter].addData(data);
-        pages.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 3, 2);
+        pages.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 1, 1);
         $('.dashDock .container').css('width', (counter+1) * $('#addAPage').outerWidth(true));
     });
 
