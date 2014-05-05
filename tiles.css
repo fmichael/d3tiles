@@ -136,3 +136,69 @@ Screen is 8 wide.
 #tileable {
     overflow:hidden;
 }
+
+#notifToggle {
+    left: 48%;
+    position: absolute;
+    bottom: -12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: -webkit-focus-ring-color auto 0px !important;
+}
+
+#notifToggle:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.notifArea {
+    height: 100%;
+    overflow: scroll;
+}
+
+.anon {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 2px;
+}
+
+.close_anon {
+    float: right;
+    background-image: url('img/icon_x.png');
+    background-repeat: no-repeat;
+    margin-top: 1px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.close_anon:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.announc_default {
+    background-color:#fff;
+    border:1px solid #ccc;
+}
+
+.announc_severe {
+    background-color:#d9534f;
+    border:1px solid #d43f3a;
+}
+
+.announc_warning {
+    background-color:#F7A22A;
+    border:1px solid #E28500;
+}
+
+.announc_info {
+    background-color:#59C2E0;
+    border:1px solid #46b8da;
+}
+
+.announc_success {
+    background-color:#5cb85c;
+    border:1px solid #4cae4c;
+}

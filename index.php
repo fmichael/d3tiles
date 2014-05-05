@@ -16,21 +16,6 @@
         <title>D3 - C3 - Tiling</title>
     </head>
     <body>
-        <div class="optionWrap">
-        </div>
-
-        <div class="notifBar">
-            <input id="notifExpand" type='button' value="Expand" />
-            <input id="notifCollapse" type='button' value="Collapse" />
-        </div>
-
-        <div class="tileDock">
-        </div>
-
-        <div id="tileable">
-        </div>
-
-        <div class="dashDock">
-        </div>
+        <div id="tileable"></div>
     </body>
 </html>

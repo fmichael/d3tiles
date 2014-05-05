@@ -1,76 +1,111 @@
-/* Groups Storage Object */
+// PAGES
 
-function page() {
+function page(surf) {
 
-    this.groups;
-    this.surface;
-    this.mouseX;
+    this.groupsList = {};
+    this.surface = surf;
+    this.mouseX; //current mouse pos.
     this.mouseY;
-    this.notifBool = false;
-    this.notifExpanded = false;
+
+    this.menuOpen = false; //if any side menu's are open
+
+    this.notiBool = false; //3 menu bools
     this.tileBool  = false;
     this.dashBool  = false;
+
     this.width = $(window).width();
     this.height = $(window).height();
     this.midWidth = (this.width/2) - 200;
     this.midHeight = (this.height/2) - 200;
     var that = this;
 
-    this.showNotifBar = function() {
-        if(!that.notifBool)
+    this.surface.append('<div class="topButtons"></div>'); //top logout/settings button
+    this.surface.append('<div class="notifBar">'+
+                            '<div class="notifArea"></div>'+
+                            '<input id="notifToggle" type="button" value="Expand" />'+
+                        '</div>');
+    this.surface.append('<div class="tileDock"></div>');
+    this.surface.append('<div class="dashDock"></div>');
+
+    this.addGroup = function(id) {
+        that.groupsList[id] = {};
+        var html = "<div id='"+id+"' class='groups'></div>";
+        that.surface.append(html);
+    };
+
+    this.removeGroup = function(id) {
+        that.groupsList[id].removeAllTiles();
+        delete that.groupsList[id];
+    };
+
+    this.showNotifBar = function(autoclose) {
+        if(!that.menuOpen)
         {
-            that.notifBool = true;
+            that.menuOpen = true;
             $('.notifBar').animate({
                 top: 0
             }, 200, function(){
-                that.notifBool = false;
+                that.menuOpen = false;
             });
+        }
+        if(autoclose !== undefined && autoclose && !that.notiBool) {
+            setTimeout(function(){
+                that.hideNotifBar();
+            }, 5000); //5 seconds, then close notif
         }
     };
     this.hideNotifBar = function() {
-        if(!that.notifBool)
+        if(!that.menuOpen)
         {
-            that.notifBool = true;
+            that.menuOpen = true;
             $('.notifBar').animate({
                 top: -60
             }, 200, function(){
-                that.notifBool = false;
+                that.menuOpen = false;
             });
         }
     };
     this.expandNotifBar = function() {
-        if(!that.notifBool)
+        if(!that.menuOpen)
         {
-            that.notifBool = true;
-            that.notifExpanded = true;
-            $("#notifExpand").css('display', 'none');
-            $("#notifCollapse").css('display', 'block');
+            that.menuOpen = true;
+            that.notiBool = true;
+            $('#notifToggle').val('Collapse');
             $('.notifBar').animate({
                 height: 500
             }, 200, function(){
-                that.notifBool = false;
+                that.menuOpen = false;
             });
         }
     };
     this.collapseNotifBar = function() {
-        if(!that.notifBool)
+        if(!that.menuOpen)
         {
-            that.notifBool = true;
-            that.notifExpanded = false;
-            $("#notifCollapse").css('display', 'none');
-            $("#notifExpand").css('display', 'block');
+            that.menuOpen = true;
+            that.notiBool = false;
+            $('#notifToggle').val('Expand');
             $('.notifBar').animate({
                 height: 50
             }, 200, function(){
-                that.notifBool = false;
+                that.menuOpen = false;
             });
         }
+    };
+
+    this.addAnnon = function(sev, str) {
+        var announce = '<div class="anon announc_'+getSev(sev)+'">'+str+'<i class="close_anon"></i></div>';
+        $('.notifArea').prepend(announce);
+        that.showNotifBar(true);
+    };
+
+    this.removeAnnon = function(annon) {
+        annon.remove();
     };
 
     this.showTileDock = function() {
         if(!that.tileBool)
         {
-            that.tileBool = true
+            that.tileBool = true;
             $('.tileDock').animate({
                 left: 0
             }, 250, function(){
@@ -115,7 +150,7 @@ function page() {
 
     $('div.notifBar').on("mouseleave", function() {
         setTimeout(function(){
-            if(!that.notifExpanded)
+            if(!that.notiBool)
                 that.hideNotifBar();
         }, 1000);
     });
@@ -130,28 +165,42 @@ function page() {
         }, 1000);
     });
 
-    $('#notifExpand').click(function(){
-        that.expandNotifBar();
-    });
-    $('#notifCollapse').click(function(){
-        that.collapseNotifBar();
+    $('#notifToggle').click(function(){
+        if (!that.notiBool)
+            that.expandNotifBar();
+        else
+            that.collapseNotifBar();
     });
 
+    $(this.surface).on('click', '.close_anon', function() {
+        that.removeAnnon($(this).parent());
+    });
+
+    this.surface.on('mousemove', function(e) {
+        that.mouseX = e.clientX;
+        that.mouseY = e.clientY;
+
+        if(that.mouseX > that.midWidth && that.mouseX < that.midWidth + 400)
+        {
+            if(that.mouseY > that.height - 75)
+                that.showDashDock();
+
+            else if(that.mouseY <= 50)
+                that.showNotifBar();
+        }
+
+        if(that.mouseY > that.midHeight && that.mouseY < that.midHeight + 400)
+        {
+            if(that.mouseX <= 75)
+                that.showTileDock();
+        }
+    });
 }
 
-
-
-var page;
+//groups
 
 function groups() {
-    this.groupList = {};
     this.dragging = false;
-
-    this.add = function(id) {
-        groups.groupList[id] = {tiles: {}};
-        var html = "<div id='"+id+"' class='groups'></div>";
-        surface.append(html);
-    };
 
     this.addData = function(id, data) {
         groups.groupList[id].data = data;
@@ -167,13 +216,12 @@ function groups() {
         for(var iter in tiles)
             groups.groupList[id].tiles[iter] = new tile(id, iter, tiles[iter].x, tiles[iter].y);
     };
+    this.removeAllTiles = function() {
+        console.log("Remove all tiles here");
+    };
     this.removeTile = function(id, tile) {
         $('#'+groups.groupList[id].tiles[tile].id).remove();
         delete groups.groupList[id].tiles[tile];
-    };
-    this.printGroups = function() {
-        for(var iter in groups.groupList)
-            console.log(iter, groups.groupList[iter]);
     };
 }
 
@@ -358,58 +406,58 @@ function makeSize(surface) {
     surface.css('height', (h-16)+'px');
 }
 
-$(document).on('mousemove', function(e) {
-    page.mouseX = e.clientX;
-    page.mouseY = e.clientY;
-
-    if(page.mouseX > page.midWidth && page.mouseX < page.midWidth + 400)
-    {
-        if(page.mouseY > page.height - 75)
-            page.showDashDock();
-
-        if(page.mouseY <= 50)
-            page.showNotifBar();
+function getSev(num) {
+    switch(num) {
+        case 1:
+            return 'severe';
+        break;
+        case 2:
+            return 'warning';
+        break;
+        case 3:
+            return 'info';
+        break;
+        case 4:
+            return 'success';
+        break;
+        case 5:
+        default:
+            return 'default';
     }
-    
-    if(page.mouseY > page.midHeight && page.mouseY < page.midHeight + 400)
-    {
-        if(page.mouseX <= 75)
-            page.showTileDock();
-    }
-});
-
+}
 
 var data = [
     ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
     ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
 ];
 
+var page;
+
 $( document ).ready(function() {
-    surface = $('#tileable');
+/*
+    addTrash(surface);*/
+    makeSize($('#tileable'));
+/*
+    groups = new groups();*/
+    page = new page($('#tileable'));
 
-    addTrash(surface);
-    makeSize(surface);
 
-    groups = new groups();
-    page = new page();
-    
-
-    groups.add('first');
+    /*groups.add('first');
     groups.addData('first', data);
     groups.addTiles('first', {'chart': {x:3, y:2}});
 
     groups.add('second');
     groups.addData('second', data);
-    groups.addTiles('first', {'tile2': {x:2, y:2}});
+    groups.addTiles('first', {'tile2': {x:2, y:2}});*/
 
-    
+
 });
 
 $(window).resize(function(){
     page.width = $(window).width();
     page.height = $(window).height();
     page.midWidth = (page.width/2) - 200;
-    page.midHeight = (page.height/2) - 200; 
+    page.midHeight = (page.height/2) - 200;
 });
 
 /*var system = require('system');
