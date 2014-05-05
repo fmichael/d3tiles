@@ -4,15 +4,16 @@ function pages(surf) {
 
     this.pageList = {};
     this.activePage = '';
-    this.surface = surf;
-    this.mouseX; //current mouse pos.
-    this.mouseY;
+    this.drawSurface = surf;
+    this.mouseX = 0; //current mouse pos.
+    this.mouseY = 0;
 
     this.menuOpen = false; //if any side menu's are open
 
-    this.notiBool = false; //3 menu bools
-    this.tileBool  = false;
-    this.dashBool  = false;
+    this.notiBool = false; //4 menu bools
+    this.tileBool = false;
+    this.dashBool = false;
+    this.settBool = false;
 
     this.width = $(document).width();
     this.height = $(document).height();
@@ -20,15 +21,15 @@ function pages(surf) {
     this.midHeight = (this.height/2) - 200;
     var that = this;
 
-    this.surface.append('<div class="topButtons"></div>'); //top logout/settings button
-    this.surface.append('<div class="notifBar">'+
+    this.drawSurface.append('<div class="topButtons"><div class="icon_logout"></div><div class="icon_setting"></div></div>'); //top logout/settings button
+    this.drawSurface.append('<div class="notifBar">'+
                             '<div class="notifArea"></div>'+
                             '<input id="notifToggle" type="button" value="Expand" />'+
                         '</div>');
-    this.surface.append('<div class="tileDock"></div>');
-    this.surface.append('<div class="dashDock"><div class="container"></div></div>');
-    this.surface.append('<div class="garbage">TRASH</div>');
-    this.surface.css('height', ($(document).height()-16)+'px');
+    this.drawSurface.append('<div class="tileDock"></div>');
+    this.drawSurface.append('<div class="dashDock"><div class="container"></div></div>');
+    this.drawSurface.append('<div class="garbage">TRASH</div>');
+    this.drawSurface.css('height', ($(document).height()-16)+'px');
 
     this.addPage = function(id) {
         that.pageList[id] = new page(that, id);
@@ -41,11 +42,11 @@ function pages(surf) {
 
     this.changeToPage = function(id) {
         that.activePage = id;
-        that.surface.append('<div id="'+id+'" class="page"></div>');
+        that.drawSurface.append('<div id="'+id+'" class="page"></div>');
     };
 
     this.showNotifBar = function(autoclose) {
-        if(!that.menuOpen)
+        if(!that.menuOpen && $('.notifArea').children().length > 0)
         {
             that.menuOpen = true;
             $('.notifBar').animate({
@@ -84,7 +85,7 @@ function pages(surf) {
             });
         }
     };
-    this.collapseNotifBar = function() {
+    this.collapseNotifBar = function(closeAfter) {
         if(!that.menuOpen)
         {
             that.menuOpen = true;
@@ -94,6 +95,8 @@ function pages(surf) {
                 height: 50
             }, 200, function(){
                 that.menuOpen = false;
+                if(closeAfter)
+                    that.hideNotifBar();
             });
         }
     };
@@ -106,6 +109,9 @@ function pages(surf) {
 
     this.removeAnnon = function(annon) {
         annon.remove();
+        if($('.notifArea').children().length == 0) {
+            that.collapseNotifBar(true);
+        }
     };
 
     this.showTileDock = function() {
@@ -154,6 +160,32 @@ function pages(surf) {
         }
     };
 
+    this.showSettingDock = function() {
+        if(!that.settBool)
+        {
+            that.settBool = true;
+            $('.topButtons').animate({
+                right: -100,
+                top: -100
+            }, function(){
+                that.settBool = false;
+            });
+        }
+    };
+
+    this.hideSettingDock = function() {
+        if(!that.settBool)
+        {
+            that.settBool = true;
+            $('.topButtons').animate({
+                right: -250,
+                top: -250
+            }, function(){
+                that.settBool = false;
+            });
+        }
+    };
+
     $('div.notifBar').on("mouseleave", function() {
         setTimeout(function(){
             if(!that.notiBool && !$('div.notifBar').is(":hover"))
@@ -173,6 +205,13 @@ function pages(surf) {
         }, 1000);
     });
 
+    $('div.topButtons').on("mouseleave", function() {
+        setTimeout(function(){
+            if (!$('div.topButtons').is(":hover"))
+                that.hideSettingDock();
+        }, 1000);
+    });
+
     $('#notifToggle').click(function(){
         if (!that.notiBool)
             that.expandNotifBar();
@@ -180,26 +219,30 @@ function pages(surf) {
             that.collapseNotifBar();
     });
 
-    $(this.surface).on('click', '.close_anon', function() {
+    $(this.drawSurface).on('click', '.close_anon', function() {
         that.removeAnnon($(this).parent());
     });
 
-    this.surface.on('mousemove', function(e) {
+    this.drawSurface.on('mousemove', function(e) {
         that.mouseX = e.clientX;
         that.mouseY = e.clientY;
 
+        if (that.mouseX >= that.width - 25 && that.mouseY <= 25) {
+            that.showSettingDock();
+        }
+
         if(that.mouseX > that.midWidth && that.mouseX < that.midWidth + 400)
         {
-            if(that.mouseY > that.height - 75)
+            if(that.mouseY > that.height - 15)
                 that.showDashDock();
 
-            else if(that.mouseY <= 50)
+            else if(that.mouseY <= 15)
                 that.showNotifBar();
         }
 
         if(that.mouseY > that.midHeight && that.mouseY < that.midHeight + 400)
         {
-            if(that.mouseX <= 75)
+            if(that.mouseX <= 15)
                 that.showTileDock();
         }
     });
@@ -347,20 +390,20 @@ function tile(parent, id, x, y) {
                         case 'number':
                         case 'range':
                         case 'input':
-                            if($(this).val() != '')
+                            if($(this).val() !== '')
                                 value = $(this).val();
                         break;
                     }
                     found = true;
                 }
                 else if ($(this).context.localName == 'textarea') {
-                    if($(this).val() != '') {
+                    if($(this).val() !== '') {
                         value = $(this).val();
                         found = true;
                     }
                 }
                 else if ($(this).context.localName == 'select') {
-                    if($(this).val() != '') {
+                    if($(this).val() !== '') {
                         value = $(this).val();
                         found = true;
                     }
@@ -447,17 +490,21 @@ function mergeObjects(tileObj, groupObj) {
 function getSev(num) {
     switch(num) {
         case 1:
+        case 'error':
             return 'severe';
-        break;
+            break;
         case 2:
+        case 'warn':
             return 'warning';
-        break;
+            break;
         case 3:
+        case 'info':
             return 'info';
-        break;
+            break;
         case 4:
+        case 'good':
             return 'success';
-        break;
+            break;
         case 5:
         default:
             return 'default';
