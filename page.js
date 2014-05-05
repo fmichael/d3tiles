@@ -26,7 +26,7 @@ function pages(surf) {
                             '<input id="notifToggle" type="button" value="Expand" />'+
                         '</div>');
     this.surface.append('<div class="tileDock"></div>');
-    this.surface.append('<div class="dashDock"></div>');
+    this.surface.append('<div class="dashDock"><div class="container"></div></div>');
     this.surface.append('<div class="garbage">TRASH</div>');
     this.surface.css('height', ($(document).height()-16)+'px');
 
@@ -61,7 +61,7 @@ function pages(surf) {
         }
     };
     this.hideNotifBar = function() {
-        if(!that.menuOpen)
+        if(!that.menuOpen && !that.notiBool)
         {
             that.menuOpen = true;
             $('.notifBar').animate({
@@ -156,18 +156,20 @@ function pages(surf) {
 
     $('div.notifBar').on("mouseleave", function() {
         setTimeout(function(){
-            if(!that.notiBool)
-                that.hideNotifBar();
+            if(!that.notiBool && !$('div.notifBar').is(":hover"))
+                    that.hideNotifBar();
         }, 1000);
     });
     $('div.tileDock').on("mouseleave", function() {
         setTimeout(function(){
+            if (!$('div.tileDock').is(":hover"))
             that.hideTileDock();
         }, 1000);
     });
     $('div.dashDock').on("mouseleave", function() {
         setTimeout(function(){
-            that.hideDashDock();
+            if (!$('div.dashDock').is(":hover"))
+                that.hideDashDock();
         }, 1000);
     });
 
@@ -205,23 +207,14 @@ function pages(surf) {
 
 //page (indivial page)
 
-
-function viewPage(id)
-{
-    var html = "<h1 style='left: 0; line-height: 200px;  position: absolute; text-align:center; top 50%; width: 100%'>"+id+"</h1>";
-    $('#tileable').append(html);
-}
-
-
 function page(par, id) {
     this.id = id;
     this.parent = par;
     this.groupList = {};
     var that = this;
 
-    var html = "<button onclick='viewPage("+id+")'style='height:50px; width:50px; margin-left:5px'>"+id+"</button>";
-    $('.dashDock').prepend(html);
-
+    var html = "<button class='pageButton' >"+id+"</button>";
+    $('.dashDock .container').prepend(html);
 
     this.addGroup = function(id) {
         that.groupList[id] = new group(that, id);
@@ -478,20 +471,21 @@ var data = [
 
 var pages;
 
-$( document ).ready(function() {
+$(document).ready(function() {
 
     pages = new pages($('#tileable'));
     var counter = 0;
-    var html = "<button id='addAPage' style='height:50px; width:50px; margin-left:5px'>+</button>";
-    $('.dashDock').append(html);
+    var html = "<button id='addAPage' class='pageButton'>+</button>";
+    $('.dashDock .container').append(html);
     $('#addAPage').click(function(){
         counter = counter + 1;
-        pages.addPage(counter);
-        pages.changeToPage(counter);
-        pages.pageList[counter].addGroup('firstGroup');
-        pages.pageList[counter].groupList['firstGroup'].addData(data);
-        pages.pageList[counter].groupList['firstGroup'].addTile('newTile', 3, 2);
-    })
+        pages.addPage('page_'+counter);
+        pages.changeToPage('page_'+counter);
+        pages.pageList['page_'+counter].addGroup('group_'+counter);
+        pages.pageList['page_'+counter].groupList['group_'+counter].addData(data);
+        pages.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 3, 2);
+        $('.dashDock .container').css('width', (counter+1) * $('#addAPage').outerWidth(true));
+    });
 
 });
 

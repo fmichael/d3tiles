@@ -37,8 +37,122 @@
 
 .dashDock {
 	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
 	height: 75px;
 	bottom: -85px;
 	left: 0px;
 	border-bottom: none;
+}
+
+.visible {
+    display: inline !important;
+}
+
+.garbage {
+    position: fixed;
+    bottom: 0px;
+    left: 47%;
+    height: 20px;
+    padding: 20px;
+    background-color: #ffcc33;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.garbage.visible {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: all .5s ease-in;
+    transition: all .5s ease-in;
+}
+
+#tileable {
+    overflow:hidden;
+}
+
+#notifToggle {
+    left: 48%;
+    position: absolute;
+    bottom: -12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: -webkit-focus-ring-color auto 0px !important;
+}
+
+#notifToggle:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.notifArea {
+    height: 100%;
+    overflow: scroll;
+}
+
+.anon {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 2px;
+}
+
+.close_anon {
+    float: right;
+    background-image: url('img/icon_x.png');
+    background-repeat: no-repeat;
+    margin-top: 1px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.close_anon:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.announc_default {
+    background-color:#fff;
+    border:1px solid #ccc;
+}
+
+.announc_severe {
+    background-color:#d9534f;
+    border:1px solid #d43f3a;
+}
+
+.announc_warning {
+    background-color:#F7A22A;
+    border:1px solid #E28500;
+}
+
+.announc_info {
+    background-color:#59C2E0;
+    border:1px solid #46b8da;
+}
+
+.announc_success {
+    background-color:#5cb85c;
+    border:1px solid #4cae4c;
+}
+
+
+
+.dashDock button.pageButton {
+	height:50px;
+	width:50px;
+	margin: 13px;
+	background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: -webkit-focus-ring-color auto 0px !important;
+}
+
+.dashDock button.pageButton:hover {
+	cursor: pointer;
+	background-color: #ddd;
 }
