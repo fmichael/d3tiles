@@ -1,7 +1,6 @@
 .tile {
-    background-color: #eee;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    background-color: #ddd;
+    border: 1px dashed #000;
     float: left;
     margin: 10px;
     position: relative;

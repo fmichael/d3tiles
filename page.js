@@ -205,11 +205,23 @@ function pages(surf) {
 
 //page (indivial page)
 
+
+function viewPage(id)
+{
+    var html = "<h1 style='left: 0; line-height: 200px;  position: absolute; text-align:center; top 50%; width: 100%'>"+id+"</h1>";
+    $('#tileable').append(html);
+}
+
+
 function page(par, id) {
     this.id = id;
     this.parent = par;
     this.groupList = {};
     var that = this;
+
+    var html = "<button onclick='viewPage("+id+")'style='height:50px; width:50px; margin-left:5px'>"+id+"</button>";
+    $('.dashDock').prepend(html);
+
 
     this.addGroup = function(id) {
         that.groupList[id] = new group(that, id);
@@ -467,13 +479,20 @@ var data = [
 var pages;
 
 $( document ).ready(function() {
-    pages = new pages($('#tileable'));
 
-    pages.addPage('firstPage');
-    pages.changeToPage('firstPage');
-    pages.pageList['firstPage'].addGroup('firstGroup');
-    pages.pageList['firstPage'].groupList['firstGroup'].addData(data);
-    pages.pageList['firstPage'].groupList['firstGroup'].addTile('newTile', 3, 2);
+    pages = new pages($('#tileable'));
+    var counter = 0;
+    var html = "<button id='addAPage' style='height:50px; width:50px; margin-left:5px'>+</button>";
+    $('.dashDock').append(html);
+    $('#addAPage').click(function(){
+        counter = counter + 1;
+        pages.addPage(counter);
+        pages.changeToPage(counter);
+        pages.pageList[counter].addGroup('firstGroup');
+        pages.pageList[counter].groupList['firstGroup'].addData(data);
+        pages.pageList[counter].groupList['firstGroup'].addTile('newTile', 3, 2);
+    })
+
 });
 
 $(window).resize(function(){
