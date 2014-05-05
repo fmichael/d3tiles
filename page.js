@@ -1,8 +1,9 @@
-// PAGES
+// PAGES (collection of pages)
 
-function page(surf) {
+function pages(surf) {
 
-    this.groupsList = {};
+    this.pageList = {};
+    this.activePage = '';
     this.surface = surf;
     this.mouseX; //current mouse pos.
     this.mouseY;
@@ -13,8 +14,8 @@ function page(surf) {
     this.tileBool  = false;
     this.dashBool  = false;
 
-    this.width = $(window).width();
-    this.height = $(window).height();
+    this.width = $(document).width();
+    this.height = $(document).height();
     this.midWidth = (this.width/2) - 200;
     this.midHeight = (this.height/2) - 200;
     var that = this;
@@ -26,16 +27,20 @@ function page(surf) {
                         '</div>');
     this.surface.append('<div class="tileDock"></div>');
     this.surface.append('<div class="dashDock"></div>');
+    this.surface.append('<div class="garbage">TRASH</div>');
+    this.surface.css('height', ($(document).height()-16)+'px');
 
-    this.addGroup = function(id) {
-        that.groupsList[id] = {};
-        var html = "<div id='"+id+"' class='groups'></div>";
-        that.surface.append(html);
+    this.addPage = function(id) {
+        that.pageList[id] = new page(that);
     };
 
-    this.removeGroup = function(id) {
-        that.groupsList[id].removeAllTiles();
-        delete that.groupsList[id];
+    this.removePage = function(id) {
+        that.pageList[id].removeGroups();
+        delete that.pageList[id];
+    };
+
+    this.changeToPage = function(id) {
+        that.activePage = id;
     };
 
     this.showNotifBar = function(autoclose) {
@@ -197,9 +202,34 @@ function page(surf) {
     });
 }
 
-//groups
+//page (indivial page)
 
-function groups() {
+function page(par) {
+    this.parent = par;
+    this.groupList = {};
+    var that = this;
+
+    this.addGroup = function(id) {
+        that.groupList[id] = new group(that);
+        console.log(id, that.parent.activePage);
+        if(that.parent.activePage == that)
+            that.parent.surface.append('<div id="'+id+'"></div>"');
+    };
+    this.removeGroup = function(id) {
+        that.groupList[id].removeTiles();
+    };
+    this.removeGroups = function() {
+        for(var iter in that.groupList) {
+            that.groupList[iter].removeTiles();
+            delete that.groupList[iter];
+        }
+    };
+}
+
+//group (indivial group)
+
+function group(par) {
+    this.parent = par;
     this.dragging = false;
 
     this.addData = function(id, data) {
@@ -395,17 +425,6 @@ function mergeObjects(tileObj, groupObj) {
     return groupObj;
 }
 
-function addTrash(surface) {
-    var trash = '<div class="garbage">TRASH</div>';
-    surface.append(trash);
-}
-
-function makeSize(surface) {
-    var w = '100%';
-    var h = $(document).height();
-    surface.css('height', (h-16)+'px');
-}
-
 function getSev(num) {
     switch(num) {
         case 1:
@@ -431,16 +450,14 @@ var data = [
     ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
 ];
 
-var page;
+var pages;
 
 $( document ).ready(function() {
-/*
-    addTrash(surface);*/
-    makeSize($('#tileable'));
-/*
-    groups = new groups();*/
-    page = new page($('#tileable'));
+    pages = new pages($('#tileable'));
+    pages.addPage('firstPage');
+    pages.changeToPage('firstPage');
 
+    pages.pageList['firstPage'].addGroup('firstGroup');
 
     /*groups.add('first');
     groups.addData('first', data);
@@ -459,156 +476,3 @@ $(window).resize(function(){
     page.midWidth = (page.width/2) - 200;
     page.midHeight = (page.height/2) - 200;
 });
-
-/*var system = require('system');
-
-// Web Address (URL) of the page to capture
-var url  = system.args[1];
-
-// File name of the captured image
-var file = system.args[2]  + ".png";
-
-var page = require('webpage').create();
-
-// Browser size - height and width in pixels
-// Change the viewport to 480x320 to emulate the iPhone
-page.viewportSize = { width: 1200, height : 800 };
-
-// Set the User Agent String
-// You can change it to iPad or Android for mobile screenshots
-page.settings.userAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5";
-
-// Render the screenshot image
-page.open ( url, function ( status ) {
-  if ( status !== "success") {
-       console.log("Could not open web page : " + url);
-       phantom.exit();
-   } else {
-       window.setTimeout ( function() {
-          page.render(file);
-          console.log("Download the screenshot : " + file);
-          phantom.exit();
-       }, 1000);
-   }
-});*/
-
-/*var chart = null;
-$( document ).ready(function() {
-
-    var chart1 = {};
-    chart1.bindto = '#tile1 > .front > .contents';
-    chart1.type = 'area';
-    chart1.size = [300, 300];
-    chart1.data = [
-                ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
-                ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
-            ];
-    generate(chart1);
-
-
-    var chart2 = {};
-    chart2.bindto = '#tile2 > .front > .contents';
-    chart2.type = 'area';
-    chart2.size = [600, 450];
-    chart2.data = [
-                ['data1', 40, 100, 200, 40, 80, 60, 90, 10, 40, 09, 70, 50],
-                ['data2', 60, 40, 0, 60, 70, 110, 200, 400, 90, 70, 60, 250]
-            ];
-    generate(chart2);
-
-    $(document).on('click', '.save_btn', function() {
-        chart1.type = $(this).parent().siblings('.contents').children('select.type').val();
-
-        chart1.subchart = $(this).parent().siblings('.contents').children('input.range').is(":checked") ? true : false;
-
-        chart1.legend = $(this).parent().siblings('.contents').children('input.legend').is(":checked") ? true : false;
-
-        chart1.zoom = $(this).parent().siblings('.contents').children('input.zoom').is(":checked") ? true : false
-
-        chart1.min = $(this).parent().siblings('.contents').children('input.min').val();
-        chart1.max = $(this).parent().siblings('.contents').children('input.max').val();
-
-        generate(chart1);
-    });
-    function generate(options) {
-        var stuff = {};
-
-        if("data" in options) {
-            stuff.data = {columns: options.data};
-        }
-        if("legend" in options) {
-            stuff.legend = {show: options.legend};
-        }
-        if("size" in options) {
-            stuff.size = {width: options.size[0], height: options.size[1]};
-        }
-        if("bindto" in options) {
-            stuff.bindto = options.bindto;
-        }
-        if("type" in options) {
-            stuff.data.type = options.type;
-        }
-        if("subchart" in options) {
-            stuff.subchart = {show: options.subchart};
-        }
-        if("zoom" in options) {
-            stuff.zoom = {enabled: options.zoom};
-        }
-        if("min" in options && "max" in options) {
-            stuff.axis = {
-                y: {
-                    max: parseInt(options.max),
-                    min: parseInt(options.min),
-                }
-            };
-        }
-        stuff.data.groups = [['data1', 'data2']];
-
-        chart = c3.generate(stuff);
-
-        //example data retrieval function for filtering.
-        for(target in chart.data.targets)
-        {
-            console.log(chart.data.targets[target].id+": "+chart.data.get(chart.data.targets[target].id));
-        }
-    }
-
-    function newData(data) {
-        if (data.type == 'column')
-            chart.load({
-                columns: data.data,
-                unload: data.unload,
-            });
-        else
-            chart.load({
-                rows: data.data,
-                unload: data.unload,
-            });
-    }
-
-    //example new data example
-    setTimeout(function() {
-        var objs = {
-            data:[
-                ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
-                ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
-            ],
-            type: 'column',
-            unload: [],
-        };
-        newData(objs);
-    }, 2000);
-
-    setTimeout(function() {
-        var objs = {
-            data:[
-                ['data1', 40, 100, 200, 40, 80, 60, 90, 10, 40, 09, 70, 50],
-                ['data2', 60, 40, 0, 60, 70, 110, 200, 400, 90, 70, 60, 250]
-            ],
-            type: 'column',
-            unload: [],
-        };
-        newData(objs);
-    }, 4000);
-});*/
-
