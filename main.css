@@ -188,9 +188,73 @@ i[class^='icon_']:hover {
     border:1px solid #4cae4c;
 }
 
+.page {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    opacity: 1;
+}
 
+.page > .con_page, .page {
+    -webkit-transition: -webkit-transform .75s ease-in-out, opacity .75s ease-in-out;
+       -moz-transition: -moz-transform .75s ease-in-out, opacity .75s ease-in-out;
+        -ms-transition: -ms-transform .75s ease-in-out, opacity .75s ease-in-out;
+         -o-transition: -o-transform .75s ease-in-out, opacity .75s ease-in-out;
+            transition: transform .75s ease-in-out, opacity .75s ease-in-out;
 
-.dashDock button.pageButton {
+    -webkit-transform-style: preserve-3d;
+       -moz-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+}
+
+.page.slideLeft {
+    -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
+       -moz-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
+        -ms-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
+            transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
+    opacity: 0;
+}
+
+.page.slideLeft > .con_page {
+    -webkit-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
+       -moz-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
+        -ms-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
+            transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
+}
+
+.page.slideRight {
+    -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
+       -moz-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
+        -ms-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
+            transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
+    opacity: 0;
+}
+
+.page.slideRight > .con_page {
+    -webkit-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
+       -moz-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
+        -ms-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
+            transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
+}
+
+.page.slideTop {
+    -webkit-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
+       -moz-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
+        -ms-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
+            transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
+    opacity: 0;
+}
+
+.page.slideBottom {
+    -webkit-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
+       -moz-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
+        -ms-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
+            transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
+    opacity: 0;
+}
+
+.dashDock button.pageButton, #addAPage {
 	height:50px;
 	width:50px;
 	margin: 13px;
@@ -200,7 +264,7 @@ i[class^='icon_']:hover {
     outline: -webkit-focus-ring-color auto 0px !important;
 }
 
-.dashDock button.pageButton:hover {
+.dashDock button.pageButton:hover, #addAPage:hover {
 	cursor: pointer;
 	background-color: #ddd;
 }

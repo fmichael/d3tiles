@@ -31,7 +31,7 @@ function screen(surf) {
                             '<input id="notifToggle" type="button" value="Expand" />'+
                         '</div>');
     this.drawSurface.append('<div class="tileDock"></div>');
-    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage" class="pageButton">+</button></div></div>');
+    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
     this.drawSurface.css('height', ($(document).height()-16)+'px');
 
@@ -113,7 +113,7 @@ function screen(surf) {
             that.notiBool = true;
             $('#notifToggle').val('Collapse');
             $('.notifBar').animate({
-                height: 500
+                height: that.height*.75
             }, 200, function(){
                 that.menuOpen = false;
             });
@@ -263,11 +263,14 @@ function screen(surf) {
         var id = 'page_'+(++that.counter);
         viewable.addPage(id);
         $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
-        $('.dashDock .container').append("<button id='mini_"+id+"' class='pageButton' >"+id+"</button>");
+        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+id+"</button>");
         viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter);
         viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(data);
         viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');
+    });
 
+    $(this.drawSurface).on('click', '.pageButton', function(){
+        that.changeToPage($(this).attr('page-id'));
     });
 
     $(this.drawSurface).on('click', '.close_anon', function() {
@@ -343,7 +346,7 @@ function page(par, id) {
         }
     };
     this.drawPage = function() {
-        that.parent.drawSurface.append('<div id="'+that.id+'" class="page"></div>');
+        that.parent.drawSurface.append('<div id="'+that.id+'" class="page"><div class="con_page"></div></div>');
         for(var iter in that.groupList)
             that.groupList[iter].drawGroup();
     };
@@ -375,8 +378,6 @@ function group(par, id) {
 
     this.addTile = function(id, x, y) {
         that.tileList[id] = new tile(that, id, x, y);
-        if (that.parent.parent.activePage == that.parent.id)
-            console.log("Need to draw tile");
     };
 
     this.removeAllTiles = function() {
@@ -401,7 +402,7 @@ function group(par, id) {
         }
     };
     this.drawGroup = function() {
-        $('#'+that.parent.id).append('<div id="'+that.id+'" class="group"></div>');
+        $('#'+that.parent.id+" > .con_page").append('<div id="'+that.id+'" class="group"></div>');
         for(var iter in that.tileList)
             that.tileList[iter].drawTile();
     };

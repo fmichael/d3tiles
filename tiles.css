@@ -3,7 +3,7 @@
     border: 1px dashed #000;
     float: left;
     margin: 10px;
-    position: relative;
+    position: absolute;
 }
 
 .tile.flipped, .back {
