@@ -8,6 +8,7 @@ function screen(surf) {
     this.drawSurface = surf;
     this.mouseX = 0; //current mouse pos.
     this.mouseY = 0;
+    this.counter = 0;
 
     this.menuOpen = false; //if any side menu's are open
 
@@ -30,7 +31,7 @@ function screen(surf) {
                             '<input id="notifToggle" type="button" value="Expand" />'+
                         '</div>');
     this.drawSurface.append('<div class="tileDock"></div>');
-    this.drawSurface.append('<div class="dashDock"><div class="container"></div></div>');
+    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage" class="pageButton">+</button></div></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
     this.drawSurface.css('height', ($(document).height()-16)+'px');
 
@@ -67,13 +68,15 @@ function screen(surf) {
     };
 
     this.changeToPage = function(id) {
-        if(that.activePage !== '')
-            that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
-        that.activePage = id;
-        if(that.pageList[id].stored === false)
-            that.pageList[id].drawPage();
-        else
-            that.drawSurface.append(that.pageList[id].stored);
+        if (typeof that.pageList[id] != "undefined") {
+            if(that.activePage !== '')
+                that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
+            that.activePage = id;
+            if(that.pageList[id].stored === false)
+                that.pageList[id].drawPage();
+            else
+                that.drawSurface.append(that.pageList[id].stored);
+        }
     };
 
     this.showNotifBar = function(autoclose) {
@@ -86,7 +89,7 @@ function screen(surf) {
                 that.menuOpen = false;
             });
         }
-        if(autoclose !== undefined && autoclose && !that.notiBool) {
+        if(typeof autoclose != "undefined" && autoclose && !that.notiBool) {
             setTimeout(function(){
                 that.hideNotifBar();
             }, 5000); //5 seconds, then close notif
@@ -254,6 +257,17 @@ function screen(surf) {
             that.collapseNotifBar();
     });
 
+    $('#addAPage').click(function(){
+        var id = 'page_'+(++that.counter);
+        viewable.addPage(id);
+        $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
+        $('.dashDock .container').append("<button id='mini_"+id+"' class='pageButton' >"+id+"</button>");
+        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(data);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');
+
+    });
+
     $(this.drawSurface).on('click', '.close_anon', function() {
         that.removeAnnon($(this).parent());
     });
@@ -296,9 +310,6 @@ function page(par, id) {
     this.stored = false;
     this.groupList = {};
     var that = this;
-
-    var html = "<button id='mini_"+id+"' class='pageButton' >"+id+"</button>";
-    $('.dashDock .container').prepend(html);
 
     this.addGroup = function(id) {
         that.groupList[id] = new group(that, id);
@@ -635,21 +646,7 @@ var data = [
 var viewable;
 
 $(document).ready(function() {
-
     viewable = new screen($('#tileable'));
-    var counter = 0;
-    var html = "<button id='addAPage' class='pageButton'>+</button>";
-    $('.dashDock .container').append(html);
-    $('#addAPage').click(function(){
-        counter = counter + 1;
-        viewable.addPage('page_'+counter);
-        //viewable.changeToPage('page_'+counter);
-        viewable.pageList['page_'+counter].addGroup('group_'+counter);
-        viewable.pageList['page_'+counter].groupList['group_'+counter].addData(data);
-        viewable.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 3, 2, 'chart');
-        $('.dashDock .container').css('width', (counter+1) * $('#addAPage').outerWidth(true));
-    });
-
 });
 
 $(window).resize(function(){
