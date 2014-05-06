@@ -6,7 +6,7 @@
     position: relative;
 }
 
-.tile.flipped {
+.tile.flipped, .back {
     -webkit-transform:scaleX(-1);
     -ms-transform:scale(-1,1);
     transform:scaleX(-1);
@@ -60,6 +60,14 @@ Screen is 8 wide.
     position: absolute;
 }
 
+.back {
+    opacity: 0;
+}
+
+.front {
+    opacity: 1;
+}
+
 .back .contents {
     top: 25px;
 }
@@ -70,21 +78,24 @@ Screen is 8 wide.
 }
 
 .front, .back, .tile {
-    -webkit-transition: -webkit-transform .75s linear;
-    transition: transform .75s linear;
+    -webkit-transition: -webkit-transform .75s ease-in-out;
+    transition: transform .75s ease-in-out;
 }
 
 .back {
     display: none;
-    -webkit-transform:scaleX(-1);
-    -ms-transform:scale(-1,1);
-    transform:scaleX(-1);
+}
+
+.front.flipped {
+    display: none;
+    opacity: 0;
 }
 
 .flipped.back {
     display: block;
     z-index:100;
     background-color: #ddd;
+    opacity: 1;
 }
 
 .filter {
@@ -100,7 +111,7 @@ Screen is 8 wide.
 }
 
 .pull-right {
-    float: right;
+    float: right !important;
 }
 
 .setting_span {
@@ -110,6 +121,60 @@ Screen is 8 wide.
     z-index:100;
 }
 
+.setting_span:hover {
+    height: 28px;
+    background-color: #ddd;
+}
+
+button.setting_btn {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
+
+button.setting_btn, button.save_btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: -webkit-focus-ring-color auto 0px !important;
+}
+
+button.setting_btn:hover, button.save_btn:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
 .setting_btn {
     display: none;
+    float: left;
+}
+
+.title_area {
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+    margin: 3px;
+    cursor: -webkit-grab;
+}
+
+.too_long {
+    animation: mymove 8s linear infinite;
+    -webkit-animation: mymove 8s linear infinite;
+    position: relative;
+    float: left;
+    width: 200%;
+    height: 100%;
+    margin: 0;
+}
+
+@keyframes mymove
+{
+0%   {left:110%;}
+100% {left:-110%}
+}
+
+@-webkit-keyframes mymove /* Safari and Chrome */
+{
+0%   {left:110%}
+100% {left:-110%}
 }

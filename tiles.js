@@ -16,10 +16,10 @@ $(document).on('click', '.swap_btn, .fill_btn', function() {
                 $(that).parent().parent('.back').removeClass('flipped');
                 $(that).parent().parent().siblings('.front').removeClass('flipped');
             }
-        }, 375);
+        }, 300);
         setTimeout(function() {
             $(that).closest('.tile').removeClass('flipping');
-        }, 750);
+        }, 400);
     }
 });
 

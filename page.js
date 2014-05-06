@@ -1,6 +1,6 @@
-// PAGES (collection of pages)
+// screen (collection of page)
 
-function pages(surf) {
+function screen(surf) {
 
     this.pageList = {};
     this.activePage = '';
@@ -14,6 +14,8 @@ function pages(surf) {
     this.tileBool = false;
     this.dashBool = false;
     this.settBool = false;
+
+    this.dragging = false; //if we are moving a tile
 
     this.width = $(document).width();
     this.height = $(document).height();
@@ -280,7 +282,6 @@ function page(par, id) {
 function group(par, id) {
     this.id = id;
     this.parent = par;
-    this.dragging = false;
     this.data = {};
     this.filters = {};
     this.settings = {};
@@ -319,9 +320,11 @@ function group(par, id) {
 
 /* Tile Object */
 
-function tile(parent, id, x, y) {
+function tile(parent, id, x, y, type) {
     this.id = id;
     this.parent = parent;
+    this.type = type;
+    this.title = '';
     this.size = [x, y];
     this.chart = null;
     this.filters = {};
@@ -333,6 +336,13 @@ function tile(parent, id, x, y) {
 
     $.get('tiles/tile_'+x+'x'+y+'.html', function(result) {
         $('#'+id).append(result);
+        var innerWidth = $('#'+id).find('.title_area').outerWidth();
+        var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
+        if (innerWidth > width) {
+            $('#'+id).find('.title_area').css('width', width+'px');
+            $('#'+id).find('.title_area > span').addClass('too_long');
+        }
+
         that.drawChart();
     });
 
@@ -346,19 +356,19 @@ function tile(parent, id, x, y) {
 
     $('#'+this.id).on('dragstart', function(e, ui) { //moving tile around
         $('.garbage').addClass('visible');
-        groups.dragging = true;
+        that.parent.parent.parent.dragging = true;
     });
 
     $('#'+this.id).on('dragstop', function(e, ui) { //moving tile around
         //check if over trash can
         var trash = $('.garbage');
-        if (mouseX >= trash.offset().left && mouseX <= trash.offset().left + trash.outerWidth() &&
-            mouseY >= trash.offset().top && mouseY <= trash.offset().top + trash.outerHeight()) {
-            groups.removeTile(that.parent, that.id);
+        if (that.parent.parent.parent.mouseX >= trash.offset().left && that.parent.parent.parent.mouseX <= trash.offset().left + trash.outerWidth() &&
+            that.parent.parent.parent.mouseY >= trash.offset().top && that.parent.parent.parent.mouseY <= trash.offset().top + trash.outerHeight()) {
+            that.parent.removeTile(that.parent, that.id);
         }
 
         $('.garbage').removeClass('visible');
-        groups.dragging = false;
+        that.parent.parent.parent.dragging = false;
     });
 
     $('#'+this.id).on('click', '.save_btn', function() {
@@ -429,6 +439,7 @@ function tile(parent, id, x, y) {
 
     this.addTitle = function(title) {
         this.title = title;
+        toggleMarquee(that.id);
     };
 
     this.generate = function(options, settings, filters) {
@@ -472,9 +483,9 @@ function tile(parent, id, x, y) {
         var chart = {};
         chart.bindto = '#'+id+' > .front > .contents';
         chart.type = 'area';
-        chart.size = [150 * this.size[0], 150 * this.size[1]];
+        chart.size = [150 * that.size[0], 150 * that.size[1]];
         chart.data = that.parent.data;
-        this.generate(chart, mergeObjects(that.settings, settings), mergeObjects(that.filters, filters));
+        that.generate(chart, mergeObjects(that.settings, settings), mergeObjects(that.filters, filters));
     };
 }
 
@@ -511,26 +522,38 @@ function getSev(num) {
     }
 }
 
+function toggleMarquee(obj) {
+    var innerWidth = $('#'+obj).find('.title_area').outerWidth();
+    var width = $('#'+obj).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+obj).find('button.setting_btn').outerWidth(true));
+    if (innerWidth > width) {
+        $('#'+obj).find('.title_area').css('width', width+'px');
+        $('#'+obj).find('.title_area > span').addClass('too_long');
+    }
+    else {
+        $('#'+obj).find('.title_area > span').removeClass('too_long');
+    }
+}
+
 var data = [
     ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
     ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
 ];
 
-var pages;
+var viewable;
 
 $(document).ready(function() {
 
-    pages = new pages($('#tileable'));
+    viewable = new screen($('#tileable'));
     var counter = 0;
     var html = "<button id='addAPage' class='pageButton'>+</button>";
     $('.dashDock .container').append(html);
     $('#addAPage').click(function(){
         counter = counter + 1;
-        pages.addPage('page_'+counter);
-        pages.changeToPage('page_'+counter);
-        pages.pageList['page_'+counter].addGroup('group_'+counter);
-        pages.pageList['page_'+counter].groupList['group_'+counter].addData(data);
-        pages.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 1, 1);
+        viewable.addPage('page_'+counter);
+        viewable.changeToPage('page_'+counter);
+        viewable.pageList['page_'+counter].addGroup('group_'+counter);
+        viewable.pageList['page_'+counter].groupList['group_'+counter].addData(data);
+        viewable.pageList['page_'+counter].groupList['group_'+counter].addTile('tile_'+counter, 3, 2, 'chart');
         $('.dashDock .container').css('width', (counter+1) * $('#addAPage').outerWidth(true));
     });
 
