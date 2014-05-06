@@ -68,12 +68,17 @@ function screen(surf) {
     };
 
     this.changeToPage = function(id) {
-        if (typeof that.pageList[id] != "undefined") {
-            if(that.activePage !== '')
-                that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
+        if (typeof that.pageList[id] != "undefined" && that.activePage != id) {
+            if(that.activePage !== '') {
+                //$('#'+that.pageList[that.activePage].id).addClass('slideLeft');
+                //setTimeout(function() {
+                    that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
+                //}, 400);
+            }
             that.activePage = id;
-            if(that.pageList[id].stored === false)
-                that.pageList[id].drawPage();
+            if(that.pageList[id].stored === false) {
+                that.pageList[id].drawPage('floatTop');
+            }
             else
                 that.drawSurface.append(that.pageList[id].stored);
         }
@@ -267,6 +272,11 @@ function screen(surf) {
         viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter);
         viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(data);
         viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+1, 3, 2, 'chart');
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+2, 3, 2, 'chart');
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+3, 3, 2, 'chart');
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+4, 3, 2, 'chart');
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+5, 3, 2, 'chart');
     });
 
     $(this.drawSurface).on('click', '.pageButton', function(){
@@ -345,10 +355,15 @@ function page(par, id) {
             console.error("Error Deleting Groups: "+err.message);
         }
     };
-    this.drawPage = function() {
-        that.parent.drawSurface.append('<div id="'+that.id+'" class="page"><div class="con_page"></div></div>');
+    this.drawPage = function(location) {
+        that.parent.drawSurface.append('<div id="'+that.id+'" class="page '+((location === undefined) ? '' : location)+'"><div class="con_page"></div></div>');
         for(var iter in that.groupList)
             that.groupList[iter].drawGroup();
+        $('#'+that.id).addClass(location+'Slide');
+        setTimeout(function() {
+            $('#'+that.id).removeClass(location);
+            $('#'+that.id).removeClass(location+'Slide');
+        }, 5000);
     };
 }
 
@@ -572,7 +587,7 @@ function tile(parent, id, x, y, type) {
                 }
             };
         }
-        stuff.data.groups = [['data1', 'data2']];
+        stuff.data.groups = [['data1', 'blablablabla', 'data3']];
         chart = c3.generate(stuff);
     };
 
@@ -643,7 +658,8 @@ Object.size = function(obj) {
 
 var data = [
     ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
-    ['data2', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
+    ['blablablabla', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
+    ['data3', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
 ];
 
 var viewable;

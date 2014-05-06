@@ -208,7 +208,23 @@ i[class^='icon_']:hover {
             transform-style: preserve-3d;
 }
 
-.page.slideLeft {
+.floatLeft {
+    left: -100%;
+}
+
+.floatRight {
+    right: -100%;
+}
+
+.floatTop {
+    top: -100%
+}
+
+.floatBottom {
+    bottom: -100%;
+}
+
+.page.floatLeftSlide {
     -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
        -moz-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
         -ms-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
@@ -216,14 +232,14 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.slideLeft > .con_page {
+.page.floatLeftSlide > .con_page {
     -webkit-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
        -moz-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
         -ms-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
             transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
 }
 
-.page.slideRight {
+.page.floatRightSlide {
     -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
        -moz-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
         -ms-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
@@ -231,14 +247,14 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.slideRight > .con_page {
+.page.floatRightSlide > .con_page {
     -webkit-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
        -moz-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
         -ms-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
             transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
 }
 
-.page.slideTop {
+.page.floatTopSlide {
     -webkit-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
        -moz-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
         -ms-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
@@ -246,7 +262,7 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.slideBottom {
+.page.floatBottomSlide {
     -webkit-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
        -moz-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
         -ms-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
