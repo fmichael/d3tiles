@@ -65,6 +65,12 @@
 	border-bottom: none;
 }
 
+.dashDock > .container {
+    width: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .visible {
     display: inline !important;
 }

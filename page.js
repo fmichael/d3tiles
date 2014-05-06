@@ -3,7 +3,6 @@
 function screen(surf) {
 
     this.pageList = {};
-    this.tileList = {};
     this.activePage = '';
     this.drawSurface = surf;
     this.mouseX = 0; //current mouse pos.
@@ -27,9 +26,9 @@ function screen(surf) {
 
     this.drawSurface.append('<div class="topButtons"><i class="icon_logout"></i><i class="icon_setting"></i></div>'); //top logout/settings button
     this.drawSurface.append('<div class="notifBar">'+
-                            '<div class="notifArea"></div>'+
-                            '<input id="notifToggle" type="button" value="Expand" />'+
-                        '</div>');
+                                '<div class="notifArea"></div>'+
+                                '<input id="notifToggle" type="button" value="Expand" />'+
+                            '</div>');
     this.drawSurface.append('<div class="tileDock"></div>');
     this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
@@ -44,7 +43,9 @@ function screen(surf) {
             if (Object.size(that.pageList[id].groupList) !== 0)
                 that.pageList[id].removeAllGroups();
             $('#'+that.pageList[id].id).remove();
-            $('#mini_'+that.pageList[id].id).remove();
+            $('.pageButton[page-id="'+that.pageList[id].id+'"]').remove();
+            if (that.activePage == that.pageList[id].id)
+                that.activePage = '';
             delete that.pageList[id];
         }
         catch(err) {
@@ -58,7 +59,9 @@ function screen(surf) {
                 if (Object.size(that.pageList[iter].groupList) !== 0)
                     that.pageList[iter].removeAllGroups();
                 $('#'+that.pageList[iter].id).remove();
-                $('#mini_'+that.pageList[iter].id).remove();
+                $('.pageButton[page-id="'+that.pageList[iter].id+'"]').remove();
+                if (that.activePage == that.pageList[iter].id)
+                    that.activePage = '';
                 delete that.pageList[iter];
             }
         }
@@ -310,11 +313,6 @@ function screen(surf) {
                 that.showTileDock();
         }
     });
-}
-
-function tile(par, id) {
-    this.id = id;
-    this.parent = par;
 }
 
 //page (indivial page)
@@ -613,26 +611,17 @@ function mergeObjects(tileObj, groupObj) {
 }
 
 function getSev(num) {
-    switch(num) {
-        case 1:
-        case 'error':
-            return 'severe';
-            break;
-        case 2:
-        case 'warn':
-            return 'warning';
-            break;
-        case 3:
-        case 'info':
-            return 'info';
-            break;
-        case 4:
-        case 'good':
-            return 'success';
-            break;
-        case 5:
-        default:
-            return 'default';
+    switch(parseInt(num)) {
+    case 1:
+        return 'severe';
+    case 2:
+        return 'warning';
+    case 3:
+        return 'info';
+    case 4:
+        return 'success';
+    default:
+        return 'default';
     }
 }
 
