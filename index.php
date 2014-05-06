@@ -15,7 +15,7 @@
 
         <title>D3 - C3 - Tiling</title>
     </head>
-    <body>
+    <body style='background:lavender'>
         <div id="tileable"></div>
     </body>
 </html>

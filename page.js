@@ -25,7 +25,7 @@ function screen(surf) {
     this.midHeight = (this.height/2) - 200;
     var that = this;
 
-    this.drawSurface.append('<div class="topButtons"><div class="icon_logout"></div><div class="icon_setting"></div></div>'); //top logout/settings button
+    this.drawSurface.append('<div class="topButtons"><i class="icon_logout"></i><i class="icon_setting"></i></div>'); //top logout/settings button
     this.drawSurface.append('<div class="notifBar">'+
                             '<div class="notifArea"></div>'+
                             '<input id="notifToggle" type="button" value="Expand" />'+
@@ -202,6 +202,7 @@ function screen(surf) {
         if(!that.settBool)
         {
             that.settBool = true;
+            $('.topButtons').addClass('in');
             $('.topButtons').animate({
                 right: -100,
                 top: -100
@@ -215,6 +216,7 @@ function screen(surf) {
         if(!that.settBool)
         {
             that.settBool = true;
+            $('.topButtons').removeClass('in');
             $('.topButtons').animate({
                 right: -250,
                 top: -250

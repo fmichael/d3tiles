@@ -31,6 +31,17 @@
     border-radius: 100px;
     top: -250px;
     right: -250px;
+    -webkit-transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    -webkit-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    transform:rotate(180deg);
+}
+
+.topButtons.in {
+    -webkit-transform:rotate(0deg);
+    -ms-transform:rotate(0deg);
+    transform:rotate(0deg);
 }
 
 .tileDock {
@@ -118,7 +129,7 @@
     width: 16px;
 }
 
-div[class^='icon_']:hover {
+i[class^='icon_']:hover {
     cursor: pointer;
     opacity: 0.6;
 }
