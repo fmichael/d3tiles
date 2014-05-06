@@ -121,7 +121,7 @@ function screen(surf) {
             that.notiBool = true;
             $('#notifToggle').val('Collapse');
             $('.notifBar').animate({
-                height: that.height*.75
+                height: that.height*0.75
             }, 200, function(){
                 that.menuOpen = false;
             });
@@ -269,17 +269,33 @@ function screen(surf) {
 
     $('#addAPage').click(function(){
         var id = 'page_'+(++that.counter);
+
         viewable.addPage(id);
         $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
         $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+id+"</button>");
         viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(data);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(makeData());
         viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+1, 3, 2, 'chart');
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+2, 3, 2, 'chart');
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+3, 3, 2, 'chart');
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+4, 3, 2, 'chart');
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter+5, 3, 2, 'chart');
+
+        /*viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+1);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+1].addData(makeData());
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+1].addTile('tile_'+that.counter+1, 3, 2, 'chart');
+
+        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+2);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+2].addData(makeData());
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+2].addTile('tile_'+that.counter+2, 3, 2, 'chart');
+
+        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+3);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+3].addData(makeData());
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+3].addTile('tile_'+that.counter+3, 3, 2, 'chart');
+
+        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+4);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+4].addData(makeData());
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+4].addTile('tile_'+that.counter+4, 3, 2, 'chart');
+
+        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+5);
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+5].addData(makeData());
+        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+5].addTile('tile_'+that.counter+5, 3, 2, 'chart');*/
     });
 
     $(this.drawSurface).on('click', '.pageButton', function(){
@@ -527,9 +543,9 @@ function tile(parent, id, x, y, type) {
                     }
                     if (found) {
                         if (which == 'settings')
-                            this.settings[$(this).attr('setFilt')] = value;
+                            that.settings[$(this).attr('setFilt')] = value;
                         else
-                            this.filters[$(this).attr('setFilt')] = value;
+                            that.filters[$(this).attr('setFilt')] = value;
                     }
                 });
             });
@@ -580,8 +596,8 @@ function tile(parent, id, x, y, type) {
         if("min" in filters && "max" in filters) {
             stuff.axis = {
                 y: {
-                    max: parseInt(filters.max),
-                    min: parseInt(filters.min),
+                    max: parseInt(filters.max, 10),
+                    min: parseInt(filters.min, 10),
                 }
             };
         }
@@ -603,7 +619,7 @@ function tile(parent, id, x, y, type) {
 
 //merge Objects, tile > group precendance
 function mergeObjects(tileObj, groupObj) {
-    if (groupObj == undefined)
+    if (groupObj === undefined)
         groupObj = {};
     for(var iter in tileObj)
         groupObj[iter] = tileObj[iter];
@@ -611,7 +627,7 @@ function mergeObjects(tileObj, groupObj) {
 }
 
 function getSev(num) {
-    switch(parseInt(num)) {
+    switch(parseInt(num, 10)) {
     case 1:
         return 'severe';
     case 2:
@@ -637,6 +653,16 @@ function toggleMarquee(obj) {
     }
 }
 
+function makeData() {
+    var data = [];
+    for(var x = 0; x < (Math.floor(Math.random() * 1) + 1); x++) {
+        data[x] = [];
+        for(var y = 0; y < (Math.floor(Math.random() * 30) + 1); y++)
+            data[x][y] = Math.floor(Math.random() * 100) + 1;
+    }
+    return data;
+}
+
 Object.size = function(obj) {
     var size = 0, key;
     for (key in obj) {
@@ -644,12 +670,6 @@ Object.size = function(obj) {
     }
     return size;
 };
-
-var data = [
-    ['data1', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
-    ['blablablabla', 20, 200, 150, 200, 120, 240, 40, 25, 105, 410, 100, 90],
-    ['data3', 150, 59, 50, 260, 700, 10, 70, 60, 10, 70, 0, 200]
-];
 
 var viewable;
 

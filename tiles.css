@@ -140,7 +140,8 @@ button.setting_btn, button.save_btn {
 }
 
 button.setting_btn:hover, button.save_btn:hover {
-    background-color: #ddd;
+    background-color: rgb(221,221,221);
+    background-color: rgba(221,221,221, 0.5);
     cursor: pointer;
 }
 
@@ -160,6 +161,7 @@ button.setting_btn:hover, button.save_btn:hover {
 .too_long {
     animation: mymove 8s linear infinite;
     -webkit-animation: mymove 8s linear infinite;
+    -moz-animation: mymove 8s linear infinite;
     position: relative;
     float: left;
     width: 200%;
