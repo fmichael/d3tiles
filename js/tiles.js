@@ -18,7 +18,7 @@ function tile(parent, id, x, y, type) {
     this.initializeListeners = function() {
         $('#'+this.parent.id).append("<div id='"+this.id+"' class='tile tile_"+x+"x"+y+"'>");
 
-        $.get('tiles/tile_'+x+'x'+y+'.html', function(result) {
+        $.get('tiles/tile_'+x+'x'+y+'+'+type+'.html', function(result) {
             $('#'+id).append(result);
             $('#'+id+' .contents').attr('id', 'drawable_'+id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();

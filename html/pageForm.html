@@ -1,0 +1,25 @@
+<div class="floatBottomSlide modal">
+    <input type='hidden' value='new_page' />
+    <span class="closeModalButton">x</span>
+    <span class="title">Create a New Page</span>
+    <div class="form">
+        <span class='title'>Title: <input type='text' required></input></span>
+    </div>
+    <div class="footer">
+        <button class="cancelButton">Cancel</button>
+        <button class="confirmButton">Confirm</button>
+    </div>
+    <script> /* Validation Code, Confirmation Code, etc */
+        $('.confirmButton').on('click', function() {
+            if($('.form > .title > input').val() == '') {
+                $('.form > .title > input').addClass('error');
+                return;
+            }
+            else
+                $('.form > .title > input').removeClass('error');
+            viewable.addPage($('.form > .title > input').val(), $('.form > .title > input').val());
+            viewable.closeModal('floatBottomSlide');
+        });
+    </script>
+</div>
+

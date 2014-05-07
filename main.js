@@ -62,5 +62,19 @@ $(window).resize(function(){
 var viewable;
 
 $(document).ready(function() {
-    viewable = new screen($('#tileable'));
+    var tileList = {
+        one: {
+            type: 'chart',
+            size: '1x1',
+        },
+        two: {
+            type: 'chart',
+            size: '2x2',
+        },
+        thr: {
+            type: 'chart',
+            size: '3x2',
+        },
+    };
+    viewable = new screen($('#tileable'), tileList);
 });

@@ -1,8 +1,9 @@
 // screen (collection of page)
 
-function screen(surf) {
+function screen(surf, baseTiles) {
 
     this.pageList = {};
+    this.availableBaseTiles = baseTiles;
     this.activePage = '';
     this.drawSurface = surf;
     this.mouseX = 0; //current mouse pos.
@@ -18,25 +19,12 @@ function screen(surf) {
 
     this.dragging = false; //if we are moving a tile
     this.modalOpen = false;
+    this.modalStorage = {};
 
-    this.width = $(document).width();
-    this.height = $(document).height();
-    this.midWidth = (this.width/2) - 200;
-    this.midHeight = (this.height/2) - 200;
-    var that = this;
-
-    this.drawSurface.append('<div class="topButtons"><i class="icon_logout"></i><i class="icon_setting"></i></div>'); //top logout/settings button
-    this.drawSurface.append('<div class="notifBar">'+
-                                '<div class="notifArea"></div>'+
-                                '<input id="notifToggle" type="button" value="Expand" />'+
-                            '</div>');
-    this.drawSurface.append('<div class="tileDock"></div>');
-    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
-    this.drawSurface.append('<div class="garbage">TRASH</div>');
-    this.drawSurface.css('height', ($(document).height())+'px');
-
-    this.addPage = function(id) {
-        that.pageList[id] = new page(that, id);
+    this.addPage = function(id, title) {
+        that.pageList[id] = new page(that, id, title);
+        $('.dashDock .container').css('width', ($('.container > button').length+1) * $('#addAPage').outerWidth(true));
+        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+title+"</button>");
     };
 
     this.removePage = function(id) {
@@ -235,21 +223,28 @@ function screen(surf) {
         }
     };
 
-    this.addModal = function(direction, title, obj) {
-        that.modalOpen = direction;
+    this.addModal = function(file) {
+        that.modalOpen = true;
         that.hideDashDock();
         that.drawSurface.append('<div class="modalBack opacityFade"></div>');
-        var form = '';
+        if(that.modalStorage[file] === undefined) {
+            $.get('html/'+file+'.html', function(result) {
+                that.modalStorage[file] = result;
+                that.privOpenModal(result); //store obj so we don't fetch again
+            });
+        }
+        else
+            that.privOpenModal(that.modalStorage[file]);
+    };
 
-
-        form += '<span class="closeModalButton">x</span>';
-        that.drawSurface.append('<div class="'+direction+' modal"><span class="title">'+title+'</span>'+form+'</div>');
+    this.privOpenModal = function(obj) {
+        that.drawSurface.append(obj);
+        var direction = new RegExp("float.*Slide").exec($('.modal').attr('class'))[0];
         setTimeout(function() {
             $('.modalBack').css('opacity', 1);
             $('.modal.'+direction).removeClass(direction);
-        }, 1);
-
-        $(this.drawSurface).on('click', '.closeModalButton', function() {
+        }, 250);
+        $('.closeModalButton, .cancelButton, .modalBack').on('click', function() {
             that.closeModal(direction);
         });
     };
@@ -264,6 +259,16 @@ function screen(surf) {
             $('.modal').remove();
             that.modalOpen = false;
         });
+    };
+
+    this.createTileList = function(list) {
+        var html = '';
+        for(var iter in list) {
+            html += '<div class="miniTile background_'+list[iter].type+'" tile-url="'+list[iter].size+'_'+list[iter].type+'">'+
+                '<span class="miniTileSize">'+list[iter].size+'</span>'+
+            '</div>';
+        }
+        return html;
     };
 
     $('div.notifBar').on("mouseleave", function() {
@@ -301,10 +306,8 @@ function screen(surf) {
 
     $('#addAPage').click(function(){
         var id = 'page_'+(++that.counter);
-        that.addModal('floatBottomSlide', 'Add a New Page', {fields: {title: 'string'}});
+        that.addModal('pageForm');
         /*that.addPage(id);
-        $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
-        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+that.counter+"</button>");
         that.pageList['page_'+that.counter].addGroup('group_'+that.counter);
         that.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(makeData());
         that.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');*/
@@ -312,10 +315,6 @@ function screen(surf) {
 
     $(this.drawSurface).on('click', '.pageButton', function(){
         that.changeToPage($(this).attr('page-id'));
-    });
-
-    $(this.drawSurface).on('click', '.modalBack', function() {
-        that.closeModal(that.modalOpen);
     });
 
     $(this.drawSurface).on('click', '.close_anon', function() {
@@ -345,6 +344,22 @@ function screen(surf) {
                 that.showTileDock();
         }
     });
+
+    this.width = $(document).width();
+    this.height = $(document).height();
+    this.midWidth = (this.width/2) - 200;
+    this.midHeight = (this.height/2) - 200;
+    var that = this;
+
+    this.drawSurface.append('<div class="topButtons"><i class="icon_logout"></i><i class="icon_setting"></i></div>'); //top logout/settings button
+    this.drawSurface.append('<div class="notifBar">'+
+                                '<div class="notifArea"></div>'+
+                                '<input id="notifToggle" type="button" value="Expand" />'+
+                            '</div>');
+    this.drawSurface.append('<div class="tileDock">'+this.createTileList(this.availableBaseTiles)+'</div>');
+    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
+    this.drawSurface.append('<div class="garbage">TRASH</div>');
+    this.drawSurface.css('height', ($(document).height())+'px');
 }
 
 //page (indivial page)
