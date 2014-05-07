@@ -20,17 +20,17 @@ function tile(parent, id, x, y, type) {
 
         $.get('tiles/tile_'+x+'x'+y+'.html', function(result) {
             $('#'+id).append(result);
+            $('#'+id+' .contents').attr('id', 'drawable_'+id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
             var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
             if (innerWidth > width) {
                 $('#'+id).find('.title_area').css('width', width+'px');
                 $('#'+id).find('.title_area > span').addClass('too_long');
             }
-
             that.drawChart();
         });
 
-        $('#'+that.id).draggable({
+        /*$('#'+that.id).draggable({
             opacity: 0.35,
             snap: ".tile",
             snapMode: 'outer',
@@ -144,7 +144,7 @@ function tile(parent, id, x, y, type) {
                 });
             });
             //no need to re-draw since redrawn once flipped back over
-        });
+        });*/
     };
 
     this.addFilters = function(filters) {
@@ -203,7 +203,7 @@ function tile(parent, id, x, y, type) {
         var settings = that.parent.settings;
         var filters = that.parent.filters;
         var chart = {};
-        chart.bindto = '#'+id+' > .front > .contents';
+        chart.bindto = '#drawable_'+that.id;
         chart.type = 'area';
         chart.size = [150 * that.size[0], 150 * that.size[1]];
         chart.data = that.parent.data;

@@ -1,6 +1,7 @@
 .tile {
     background-color: #ddd;
-    border: 1px dashed #000;
+    border: 1px solid #aaa;
+    border-radius:3px;
     float: left;
     margin: 10px;
     position: relative;
@@ -11,18 +12,6 @@
     -ms-transform:scale(-1,1);
     transform:scaleX(-1);
 }
-/*translate(-150px, 0px)*/
-
-/** TILE_X_Y
-         x
-     _________
-    |         |
- y  |   TILE  |
-    |         |
-    |_________|
-
-Screen is 8 wide.
-**/
 
 .tile_1x1 {
     width: 150px;
@@ -175,7 +164,7 @@ button.setting_btn:hover, button.save_btn:hover {
 100% {left:-110%}
 }
 
-@-webkit-keyframes mymove /* Safari and Chrome */
+@-webkit-keyframes mymove
 {
 0%   {left:110%}
 100% {left:-110%}
