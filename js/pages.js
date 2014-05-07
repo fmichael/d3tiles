@@ -17,6 +17,7 @@ function screen(surf) {
     this.settBool = false;
 
     this.dragging = false; //if we are moving a tile
+    this.modalOpen = false;
 
     this.width = $(document).width();
     this.height = $(document).height();
@@ -32,7 +33,7 @@ function screen(surf) {
     this.drawSurface.append('<div class="tileDock"></div>');
     this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
-    this.drawSurface.css('height', ($(document).height()-16)+'px');
+    this.drawSurface.css('height', ($(document).height())+'px');
 
     this.addPage = function(id) {
         that.pageList[id] = new page(that, id);
@@ -161,7 +162,7 @@ function screen(surf) {
     };
 
     this.showTileDock = function() {
-        if(!that.tileBool)
+        if(!that.tileBool && !that.modalOpen)
         {
             that.tileBool = true;
             $('.tileDock').animate({
@@ -184,7 +185,7 @@ function screen(surf) {
     };
 
     this.showDashDock = function() {
-        if(!that.dashBool)
+        if(!that.dashBool && !that.modalOpen)
         {
             that.dashBool = true;
             $('.dashDock').animate({
@@ -207,7 +208,7 @@ function screen(surf) {
     };
 
     this.showSettingDock = function() {
-        if(!that.settBool)
+        if(!that.settBool && !that.modalOpen)
         {
             that.settBool = true;
             $('.topButtons').addClass('in');
@@ -232,6 +233,38 @@ function screen(surf) {
                 that.settBool = false;
             });
         }
+    };
+
+    this.addModal = function(type) {
+        that.modalOpen = true;
+        that.hideDashDock();
+        that.drawSurface.append('<div class="modalBack opacityFade"></div>');
+        var form = '';
+        var direction = 'floatLeftSlide';
+        var title = 'Default Title';
+        if (type == 'page') {//need modal for new page settings
+            direction = 'floatBottomSlide';
+            title = 'Create new Page';
+            form = '';
+        }
+        form += '<span class="closeModalButton">x</span>';
+        that.drawSurface.append('<div class="'+direction+' modal"><span class="title">'+title+'</span>'+form+'</div>');
+        setTimeout(function() {
+            $('.modalBack').css('opacity', 1);
+            $('.modal.'+direction).removeClass(direction);
+        }, 1);
+
+        $(this.drawSurface).on('click', '.closeModalButton', function() {
+            $('.modal').addClass(direction);
+            $('.modalBack').removeClass('opacityFade');
+            $('.modalBack').animate({
+                opacity: 0
+            }, 500, function(){
+                $('.modalBack').remove();
+                $('.modal').remove();
+                that.modalOpen = false;
+            });
+        });
     };
 
     $('div.notifBar').on("mouseleave", function() {
@@ -269,33 +302,13 @@ function screen(surf) {
 
     $('#addAPage').click(function(){
         var id = 'page_'+(++that.counter);
-
-        viewable.addPage(id);
+        that.addModal('page');
+        /*that.addPage(id);
         $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
-        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+id+"</button>");
-        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');
-
-        /*viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+1);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+1].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+1].addTile('tile_'+that.counter+1, 3, 2, 'chart');
-
-        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+2);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+2].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+2].addTile('tile_'+that.counter+2, 3, 2, 'chart');
-
-        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+3);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+3].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+3].addTile('tile_'+that.counter+3, 3, 2, 'chart');
-
-        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+4);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+4].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+4].addTile('tile_'+that.counter+4, 3, 2, 'chart');
-
-        viewable.pageList['page_'+that.counter].addGroup('group_'+that.counter+5);
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+5].addData(makeData());
-        viewable.pageList['page_'+that.counter].groupList['group_'+that.counter+5].addTile('tile_'+that.counter+5, 3, 2, 'chart');*/
+        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+that.counter+"</button>");
+        that.pageList['page_'+that.counter].addGroup('group_'+that.counter);
+        that.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(makeData());
+        that.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');*/
     });
 
     $(this.drawSurface).on('click', '.pageButton', function(){
@@ -333,12 +346,17 @@ function screen(surf) {
 
 //page (indivial page)
 
-function page(par, id) {
+function page(par, id, title) {
     this.id = id;
     this.parent = par;
+    this.title = title;
     this.stored = false;
     this.groupList = {};
     var that = this;
+
+    this.changeTitle = function(title) {
+        that.title = title;
+    };
 
     this.addGroup = function(id) {
         that.groupList[id] = new group(that, id);

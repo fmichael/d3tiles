@@ -1,3 +1,7 @@
+* {
+    font-family: sans-serif;
+}
+
 .notifBar, .tileDock, .dashDock, .topButtons {
 	position: fixed;
 	z-index: 1000000;
@@ -201,7 +205,7 @@ i[class^='icon_']:hover {
     opacity: 1;
 }
 
-.page > .con_page, .page {
+.page > .con_page, .page, .modal, .opacityFade {
     -webkit-transition: -webkit-transform .75s ease-in-out, opacity .75s ease-in-out;
        -moz-transition: -moz-transform .75s ease-in-out, opacity .75s ease-in-out;
         -ms-transition: -ms-transform .75s ease-in-out, opacity .75s ease-in-out;
@@ -230,7 +234,7 @@ i[class^='icon_']:hover {
     bottom: -100%;
 }
 
-.page.floatLeftSlide {
+.floatLeftSlide {
     -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
        -moz-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
         -ms-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);
@@ -238,14 +242,14 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.floatLeftSlide > .con_page {
+.floatLeftSlide > .con_page {
     -webkit-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
        -moz-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
         -ms-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
             transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);
 }
 
-.page.floatRightSlide {
+.floatRightSlide {
     -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
        -moz-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
         -ms-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);
@@ -253,14 +257,14 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.floatRightSlide > .con_page {
+.floatRightSlide > .con_page {
     -webkit-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
        -moz-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
         -ms-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
             transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);
 }
 
-.page.floatTopSlide {
+.floatTopSlide {
     -webkit-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
        -moz-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
         -ms-transform: translate3d(0, -100%, 0) rotateY(-90deg) translate3d(0, -100%, 0);
@@ -268,12 +272,63 @@ i[class^='icon_']:hover {
     opacity: 0;
 }
 
-.page.floatBottomSlide {
+.floatBottomSlide {
     -webkit-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
        -moz-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
         -ms-transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
             transform: translate3d(0, 100%, 0) rotateY(-90deg) translate3d(0, 100%, 0);
     opacity: 0;
+}
+
+.modalBack {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.7);
+    opacity: 0;
+}
+
+.modal {
+    width: 40%;
+    height: 60%;
+    left: 30%;
+    top: 10%;
+    position:absolute;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.modal > span.title {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid #eee;
+    float: left;
+    text-align: center;
+}
+
+.closeModalButton {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #000;
+    right: -15px;
+    top: -15px;
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 24px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.closeModalButton:hover {
+    color: #fff;
+    background-color: #333;
 }
 
 .dashDock button.pageButton, #addAPage {
