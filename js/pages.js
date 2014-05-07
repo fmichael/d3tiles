@@ -235,18 +235,13 @@ function screen(surf) {
         }
     };
 
-    this.addModal = function(type) {
-        that.modalOpen = true;
+    this.addModal = function(direction, title, obj) {
+        that.modalOpen = direction;
         that.hideDashDock();
         that.drawSurface.append('<div class="modalBack opacityFade"></div>');
         var form = '';
-        var direction = 'floatLeftSlide';
-        var title = 'Default Title';
-        if (type == 'page') {//need modal for new page settings
-            direction = 'floatBottomSlide';
-            title = 'Create new Page';
-            form = '';
-        }
+
+
         form += '<span class="closeModalButton">x</span>';
         that.drawSurface.append('<div class="'+direction+' modal"><span class="title">'+title+'</span>'+form+'</div>');
         setTimeout(function() {
@@ -255,15 +250,19 @@ function screen(surf) {
         }, 1);
 
         $(this.drawSurface).on('click', '.closeModalButton', function() {
-            $('.modal').addClass(direction);
-            $('.modalBack').removeClass('opacityFade');
-            $('.modalBack').animate({
-                opacity: 0
-            }, 500, function(){
-                $('.modalBack').remove();
-                $('.modal').remove();
-                that.modalOpen = false;
-            });
+            that.closeModal(direction);
+        });
+    };
+
+    this.closeModal = function(direction) {
+        $('.modal').addClass(direction);
+        $('.modalBack').removeClass('opacityFade');
+        $('.modalBack').animate({
+            opacity: 0
+        }, 500, function(){
+            $('.modalBack').remove();
+            $('.modal').remove();
+            that.modalOpen = false;
         });
     };
 
@@ -302,7 +301,7 @@ function screen(surf) {
 
     $('#addAPage').click(function(){
         var id = 'page_'+(++that.counter);
-        that.addModal('page');
+        that.addModal('floatBottomSlide', 'Add a New Page', {fields: {title: 'string'}});
         /*that.addPage(id);
         $('.dashDock .container').css('width', (that.counter+1) * $('#addAPage').outerWidth(true));
         $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+that.counter+"</button>");
@@ -313,6 +312,10 @@ function screen(surf) {
 
     $(this.drawSurface).on('click', '.pageButton', function(){
         that.changeToPage($(this).attr('page-id'));
+    });
+
+    $(this.drawSurface).on('click', '.modalBack', function() {
+        that.closeModal(that.modalOpen);
     });
 
     $(this.drawSurface).on('click', '.close_anon', function() {
