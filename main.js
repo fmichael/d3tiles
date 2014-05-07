@@ -67,6 +67,10 @@ $(document).ready(function() {
             type: 'chart',
             size: '1x1',
         },
+        onepfive: {
+            type: 'number',
+            size: '1x1',
+        },
         two: {
             type: 'chart',
             size: '2x2',

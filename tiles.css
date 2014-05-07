@@ -194,3 +194,7 @@ button.setting_btn {
 .background_table {
     background: url(img/tile_table.png) no-repeat;
 }
+
+.background_number {
+    background: url(img/tile_number.png) no-repeat;
+}
