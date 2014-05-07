@@ -223,7 +223,7 @@ function screen(surf, baseTiles) {
         }
     };
 
-    this.addModal = function(file) {
+    this.addModal = function(file, extra) {
         that.modalOpen = true;
         that.hideDashDock();
         that.drawSurface.append('<div class="modalBack opacityFade"></div>');
@@ -271,40 +271,40 @@ function screen(surf, baseTiles) {
         return html;
     };
 
-    $('div.notifBar').on("mouseleave", function() {
+    this.drawSurface.on("mouseleave", 'div.notifBar', function() {
         setTimeout(function(){
             if(!that.notiBool && !$('div.notifBar').is(":hover"))
                     that.hideNotifBar();
         }, 1000);
     });
-    $('div.tileDock').on("mouseleave", function() {
+    this.drawSurface.on("mouseleave", 'div.tileDock', function() {
         setTimeout(function(){
             if (!$('div.tileDock').is(":hover"))
             that.hideTileDock();
         }, 1000);
     });
-    $('div.dashDock').on("mouseleave", function() {
+    this.drawSurface.on("mouseleave", 'div.dashDock', function() {
         setTimeout(function(){
             if (!$('div.dashDock').is(":hover"))
                 that.hideDashDock();
         }, 1000);
     });
 
-    $('div.topButtons').on("mouseleave", function() {
+    this.drawSurface.on("mouseleave", 'div.topButtons', function() {
         setTimeout(function(){
             if (!$('div.topButtons').is(":hover"))
                 that.hideSettingDock();
         }, 1000);
     });
 
-    $('#notifToggle').click(function(){
+    this.drawSurface.on('click', '#notifToggle', function(){
         if (!that.notiBool)
             that.expandNotifBar();
         else
             that.collapseNotifBar();
     });
 
-    $('#addAPage').click(function(){
+    this.drawSurface.on('click', '#addAPage', function(){
         var id = 'page_'+(++that.counter);
         that.addModal('pageForm');
         /*that.addPage(id);
@@ -313,11 +313,15 @@ function screen(surf, baseTiles) {
         that.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');*/
     });
 
-    $(this.drawSurface).on('click', '.pageButton', function(){
+    this.drawSurface.on('click', '.miniTile', function() {
+        that.addModal('tileForm', $(this).attr('tile-url'));
+    });
+
+    this.drawSurface.on('click', '.pageButton', function(){
         that.changeToPage($(this).attr('page-id'));
     });
 
-    $(this.drawSurface).on('click', '.close_anon', function() {
+    this.drawSurface.on('click', '.close_anon', function() {
         that.removeAnnon($(this).parent());
     });
 

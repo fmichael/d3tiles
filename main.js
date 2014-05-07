@@ -75,6 +75,10 @@ $(document).ready(function() {
             type: 'chart',
             size: '3x2',
         },
+        fou: {
+            type: 'table',
+            size: '3x3',
+        }
     };
     viewable = new screen($('#tileable'), tileList);
 });

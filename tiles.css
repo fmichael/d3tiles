@@ -190,3 +190,7 @@ button.setting_btn {
 .background_chart {
     background: url(img/tile_chart.png) no-repeat;
 }
+
+.background_table {
+    background: url(img/tile_table.png) no-repeat;
+}
