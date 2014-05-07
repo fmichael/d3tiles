@@ -481,7 +481,8 @@
             return +d3.select(__bindto).style("width").replace('px', ''); // TODO: if rotated, use height
         }
         function getParentHeight() {
-            return +d3.select(__bindto).style('height').replace('px', ''); // TODO: if rotated, use width
+            //fix for height turning into "auto", can't find height if auto
+            return +$(__bindto).parent().height(); // TODO: if rotated, use width
         }
         function getAxisClipX(forHorizontal) {
             return forHorizontal ? -(1 + 4) : -(margin.left - 1);

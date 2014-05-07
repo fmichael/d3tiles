@@ -10,8 +10,10 @@
         <script type="text/javascript" src="jquery-ui.js"></script>
         <script type="text/javascript" src="d3.js"></script>
         <script type="text/javascript" src="c3.js"></script>
-        <script type="text/javascript" src="tiles.js"></script>
-        <script type="text/javascript" src="page.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="js/pages.js"></script>
+        <script type="text/javascript" src="js/groups.js"></script>
+        <script type="text/javascript" src="js/tiles.js"></script>
 
         <title>D3 - C3 - Tiling</title>
     </head>
