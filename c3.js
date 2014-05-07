@@ -286,7 +286,7 @@
 
         /*-- Set Variables --*/
 
-        var clipId = (typeof __bindto === "string" ? __bindto.replace('#', '') : __bindto.id)  + '-clip',
+        var clipId = (typeof __bindto === "string" ? __bindto.id : __bindto.id)  + '-clip',
             clipIdForXAxis = clipId + '-xaxis',
             clipIdForYAxis = clipId + '-yaxis',
             clipPath = getClipPath(clipId),

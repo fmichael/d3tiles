@@ -30,7 +30,7 @@ function tile(parent, id, x, y, type) {
             that.drawChart();
         });
 
-        /*$('#'+that.id).draggable({
+        $('#'+that.id).draggable({
             opacity: 0.35,
             snap: ".tile",
             snapMode: 'outer',
@@ -144,7 +144,7 @@ function tile(parent, id, x, y, type) {
                 });
             });
             //no need to re-draw since redrawn once flipped back over
-        });*/
+        });
     };
 
     this.addFilters = function(filters) {
