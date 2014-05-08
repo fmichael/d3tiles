@@ -12,7 +12,7 @@ function tile(parent, id, x, y, type) {
     this.settings = {};
 
     var that = this;
-    if(that.parent.parent.parent.activePage == that.parent.parent.id) {
+    if(that.parent.parent.parent.activePage == that.parent.parent.id) { //if adding tile to current page
         that.initializeListeners();
     }
 
@@ -229,7 +229,17 @@ function tile(parent, id, x, y, type) {
             }).addTo(that.map);
         }
         else if (that.type == 'table') {
+            var appender = '<table id="table_'+that.id+'"><thead>';
+            var columns = [];
+            for(var iter in that.parent.data)
+                appender += '<th>'+iter+'</th>';
+            appender += '</thead><tbody>';
+            //create json object
 
+
+            appender += '</tbody></table>';
+            $('#drawable_'+that.id).append(appender);
+            $('#table_'+that.id).dynatable();
         }
     };
 }

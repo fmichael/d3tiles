@@ -40,6 +40,11 @@
     height: 300px;
 }
 
+.tile_3x3 {
+    width: 450px;
+    height: 450px;
+}
+
 .tile_4x3 {
     width: 600px;
     height: 450px;

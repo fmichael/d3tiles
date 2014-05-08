@@ -45,9 +45,10 @@ function makeData(opt) {
         };
     }
     else if (opt == 'table') {
+        var amt = Math.floor(Math.random() * 30) + 1;
         for(var x = 0; x < 5; x++) {
             data[x] = [];
-            var amt = Math.floor(Math.random() * 30) + 1;
+
             for(var y = 0; y < amt; y++)
                 data[x][y] = Math.floor(Math.random() * 100) + 1;
         }
