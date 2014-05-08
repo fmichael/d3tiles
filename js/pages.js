@@ -8,7 +8,6 @@ function screen(surf, baseTiles) {
     this.drawSurface = surf;
     this.mouseX = 0; //current mouse pos.
     this.mouseY = 0;
-    this.counter = 0;
 
     this.menuOpen = false; //if any side menu's are open
 
@@ -307,10 +306,6 @@ function screen(surf, baseTiles) {
     this.drawSurface.on('click', '#addAPage', function(){
         var id = 'page_'+(++that.counter);
         that.addModal('pageForm');
-        /*that.addPage(id);
-        that.pageList['page_'+that.counter].addGroup('group_'+that.counter);
-        that.pageList['page_'+that.counter].groupList['group_'+that.counter].addData(makeData());
-        that.pageList['page_'+that.counter].groupList['group_'+that.counter].addTile('tile_'+that.counter, 3, 2, 'chart');*/
     });
 
     this.drawSurface.on('click', '.miniTile', function() {

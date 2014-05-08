@@ -18,7 +18,7 @@ function tile(parent, id, x, y, type) {
     this.initializeListeners = function() {
         $('#'+this.parent.id).append("<div id='"+this.id+"' class='tile tile_"+x+"x"+y+"'>");
 
-        $.get('tiles/tile_'+x+'x'+y+'+'+type+'.html', function(result) {
+        $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
             $('#'+id).append(result);
             $('#'+id+' .contents').attr('id', 'drawable_'+id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
@@ -89,61 +89,63 @@ function tile(parent, id, x, y, type) {
         });
 
         $('#'+that.id).on('click', '.save_btn', function() {
-            $(this).closest('.back').find('.contents').children().each(function() {
-                var which = 'settings';
-                if ($(this).hasClass('settings'))
-                    which = 'settings';
-                else if ($(this).hasClass('filter'))
-                    which = 'filters';
-                $(this).children().each(function() {
-                    var value = false;
-                    var found = false;
-                    //grab each setting
-                    if ($(this).context.localName == 'input') {
-                        switch($(this).attr('type')) {
-                            case 'checkbox':
-                                if($(this).is(":checked"))
-                                    value = true;
-                                else
-                                    value = false;
-                            break;
-                            case 'radio':
-                                if($(this).is(":checked"))
-                                    value = true;
-                                else
-                                    value = false;
-                            break;
-                            case 'text':
-                            case 'number':
-                            case 'range':
-                            case 'input':
-                                if($(this).val() !== '')
-                                    value = $(this).val();
-                            break;
-                        }
-                        found = true;
-                    }
-                    else if ($(this).context.localName == 'textarea') {
-                        if($(this).val() !== '') {
-                            value = $(this).val();
+            if(that.type == 'chart') {
+                $(this).closest('.back').find('.contents').children().each(function() {
+                    var which = 'settings';
+                    if ($(this).hasClass('settings'))
+                        which = 'settings';
+                    else if ($(this).hasClass('filter'))
+                        which = 'filters';
+                    $(this).children().each(function() {
+                        var value = false;
+                        var found = false;
+                        //grab each setting
+                        if ($(this).context.localName == 'input') {
+                            switch($(this).attr('type')) {
+                                case 'checkbox':
+                                    if($(this).is(":checked"))
+                                        value = true;
+                                    else
+                                        value = false;
+                                break;
+                                case 'radio':
+                                    if($(this).is(":checked"))
+                                        value = true;
+                                    else
+                                        value = false;
+                                break;
+                                case 'text':
+                                case 'number':
+                                case 'range':
+                                case 'input':
+                                    if($(this).val() !== '')
+                                        value = $(this).val();
+                                break;
+                            }
                             found = true;
                         }
-                    }
-                    else if ($(this).context.localName == 'select') {
-                        if($(this).val() !== '') {
-                            value = $(this).val();
-                            found = true;
+                        else if ($(this).context.localName == 'textarea') {
+                            if($(this).val() !== '') {
+                                value = $(this).val();
+                                found = true;
+                            }
                         }
-                    }
-                    if (found) {
-                        if (which == 'settings')
-                            that.settings[$(this).attr('setFilt')] = value;
-                        else
-                            that.filters[$(this).attr('setFilt')] = value;
-                    }
+                        else if ($(this).context.localName == 'select') {
+                            if($(this).val() !== '') {
+                                value = $(this).val();
+                                found = true;
+                            }
+                        }
+                        if (found) {
+                            if (which == 'settings')
+                                that.settings[$(this).attr('setFilt')] = value;
+                            else
+                                that.filters[$(this).attr('setFilt')] = value;
+                        }
+                    });
                 });
-            });
-            //no need to re-draw since redrawn once flipped back over
+                //no need to re-draw since redrawn once flipped back over
+            }
         });
     };
 
@@ -164,50 +166,66 @@ function tile(parent, id, x, y, type) {
         that.initializeListeners();
     };
 
-    this.generate = function(options, settings, filters) {
-        var stuff = {};
-        if("data" in options) {
-            stuff.data = {columns: options.data};
+    this.generateChart = function(options, settings, filters) {
+        if(that.type == 'chart') {
+            var stuff = {};
+            if("data" in options) {
+                stuff.data = {columns: options.data};
+            }
+            if("legend" in settings) {
+                stuff.legend = {show: settings.legend};
+            }
+            if("size" in options) {
+                stuff.size = {width: options.size[0], height: options.size[1]};
+            }
+            if("bindto" in options) {
+                stuff.bindto = options.bindto;
+            }
+            if("type" in settings) {
+                stuff.data.type = settings.type;
+            }
+            if("subchart" in settings) {
+                stuff.subchart = {show: settings.subchart};
+            }
+            if("zoom" in settings) {
+                stuff.zoom = {enabled: settings.zoom};
+            }
+            if("min" in filters && "max" in filters) {
+                stuff.axis = {
+                    y: {
+                        max: parseInt(filters.max, 10),
+                        min: parseInt(filters.min, 10),
+                    }
+                };
+            }
+            stuff.data.groups = [['data1', 'blablablabla', 'data3']];
+            chart = c3.generate(stuff);
         }
-        if("legend" in settings) {
-            stuff.legend = {show: settings.legend};
-        }
-        if("size" in options) {
-            stuff.size = {width: options.size[0], height: options.size[1]};
-        }
-        if("bindto" in options) {
-            stuff.bindto = options.bindto;
-        }
-        if("type" in settings) {
-            stuff.data.type = settings.type;
-        }
-        if("subchart" in settings) {
-            stuff.subchart = {show: settings.subchart};
-        }
-        if("zoom" in settings) {
-            stuff.zoom = {enabled: settings.zoom};
-        }
-        if("min" in filters && "max" in filters) {
-            stuff.axis = {
-                y: {
-                    max: parseInt(filters.max, 10),
-                    min: parseInt(filters.min, 10),
-                }
-            };
-        }
-        stuff.data.groups = [['data1', 'blablablabla', 'data3']];
-        chart = c3.generate(stuff);
     };
 
     this.drawChart = function() {
-        var settings = that.parent.settings;
-        var filters = that.parent.filters;
-        var chart = {};
-        chart.bindto = '#drawable_'+that.id;
-        chart.type = 'area';
-        chart.size = [150 * that.size[0], 150 * that.size[1]];
-        chart.data = that.parent.data;
-        that.generate(chart, mergeObjects(that.settings, settings), mergeObjects(that.filters, filters));
+        if(that.type == 'chart') {
+            var settings = that.parent.settings;
+            var filters = that.parent.filters;
+            var chart = {};
+            chart.bindto = '#drawable_'+that.id;
+            chart.type = 'area';
+            chart.size = [150 * that.size[0], 150 * that.size[1]];
+            chart.data = that.parent.data;
+            that.generateChart(chart, mergeObjects(that.settings, settings), mergeObjects(that.filters, filters));
+        }
+        else if (that.type == 'map') {
+            var map = L.map('map', {
+                layers: MQ.mapLayer(),
+                center: [that.parent.data.coord1.lat,that.parent.data.coord1.lon],
+                zoom: 12,
+            });
+            var marker = L.marker([that.parent.data.coord1.lat,that.parent.data.coord1.lon]).addTo(map);
+            L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg',{
+                attribution: '<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
+            }).addTo(map);
+            //use the leaflet api to draw a charts
+        }
     };
 }
 

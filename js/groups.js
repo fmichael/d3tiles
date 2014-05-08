@@ -22,8 +22,8 @@ function group(par, id) {
         that.settings = settings;
     };
 
-    this.addTile = function(id, x, y) {
-        that.tileList[id] = new tile(that, id, x, y);
+    this.addTile = function(id, x, y, type) {
+        that.tileList[id] = new tile(that, id, x, y, type);
     };
 
     this.removeAllTiles = function() {

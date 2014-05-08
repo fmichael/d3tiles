@@ -34,7 +34,16 @@ function toggleMarquee(obj) {
     }
 }
 
-function makeData() {
+function makeData(opt) {
+    if(opt == 'map') {
+        var mapdata = {
+            coord1: {
+                lat: 51.505,
+                lon: -0.09,
+            }
+        };
+        return mapdata;
+    }
     var data = [];
     for(var x = 0; x < (Math.floor(Math.random() * 5) + 1); x++) {
         data[x] = [];
