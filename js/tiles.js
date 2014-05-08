@@ -17,7 +17,7 @@ function tile(parent, id, x, y, type) {
     }
 
     this.initializeListeners = function() {
-        $('#'+this.parent.id).append("<div id='"+this.id+"' class='tile tile_"+x+"x"+y+"'>");
+        $('#'+that.parent.id).append("<div id='"+that.id+"' tile-type='"+that.type+"' class='tile tile_"+x+"x"+y+"'>");
 
         $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
             $('#'+id).append(result);
@@ -224,26 +224,84 @@ function tile(parent, id, x, y, type) {
                 center: [ 40.731701, -73.993411 ],
                 zoom: 12
             });
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { //osm tile layer
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
             }).addTo(that.map);
         }
         else if (that.type == 'table') {
-            var appender = '<table id="table_'+that.id+'"><thead>';
+            $('#drawable_'+that.id).empty();
+            var appender = '<div class="table_cont"><table id="table_'+that.id+'" class="table table-bordered"><thead>';
             var columns = [];
-            for(var iter in that.parent.data)
-                appender += '<th>'+iter+'</th>';
-            appender += '</thead><tbody>';
+            //for(var iter in that.parent.data)
+                //appender += '<th>'+iter+'</th>';
+                appender += "<th>band</th><th>song</th>";
+            appender += '</thead><tbody></div>';
             //create json object
-
+            /*var obj = {};
+            for(var iter in that.parent.data) {
+                for(var innerIter in that.parent.data[iter]) {
+                    obj
+                }
+            }*/
+            var json = '['+
+              '{'+
+                '"band": "Weezer",'+
+                '"song": "El Scorcho"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '},'+
+              '{'+
+                '"band": "Chevelle",'+
+                '"song": "Family System"'+
+              '}'+
+            ']';
 
             appender += '</tbody></table>';
             $('#drawable_'+that.id).append(appender);
-            $('#table_'+that.id).dynatable();
+            $('#table_'+that.id).dynatable({
+                search: false,
+                dataset: {
+                    records: JSON.parse(json)
+                },
+            });
         }
     };
 }
-
-/*
-
-*/

@@ -60,7 +60,6 @@ function screen(surf, baseTiles) {
 
     this.changeToPage = function(id) {
         if (typeof that.pageList[id] != "undefined" && that.activePage != id) {
-
             //if first page:
             var slideIn = '';
             var slideOut = '';
@@ -111,7 +110,7 @@ function screen(surf, baseTiles) {
         {
             that.menuOpen = true;
             $('.notifBar').animate({
-                top: -60
+                top: -65
             }, 200, function(){
                 that.menuOpen = false;
             });
@@ -431,6 +430,6 @@ function page(par, id, title) {
         setTimeout(function() {
             $('#'+that.id).removeClass(location);
             $('#'+that.id).removeClass(location+'Slide');
-        }, 250);
+        }, 300);
     };
 }

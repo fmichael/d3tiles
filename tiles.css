@@ -9,6 +9,11 @@
     overflow: hidden;
 }
 
+.tile > .front > .contents {
+    width: 100%;
+    height: 100%;
+}
+
 .tile.flipped, .back {
     -webkit-transform:scaleX(-1);
     -ms-transform:scale(-1,1);
@@ -238,4 +243,33 @@ button.setting_btn {
 
 .background_map {
     background: url(img/tile_map.png) no-repeat;
+}
+
+/* Tile Type Specific Styles */
+
+.tile[tile-type='table'] .dynatable-record-count {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.tile[tile-type='table'] .dynatable-pagination-links {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 5px;
+}
+
+.tile[tile-type='table'] .dynatable-per-page {
+    position: absolute;
+    bottom: 0;
+    left: 43%;
+    margin-bottom: 5px;
+}
+
+.tile[tile-type='table'] table.table {
+    margin-top: 22px;
+    width: 100%;
 }

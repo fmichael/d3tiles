@@ -46,7 +46,7 @@
   defaults = {
     features: {
       paginate: true,
-      sort: false,
+      sort: true,
       pushState: true,
       search: false,
       recordCount: true,
@@ -1339,14 +1339,12 @@
             (pages + 1) - settings.inputs.paginationGap[3]
           ];
 
-      pageLinks += '<li><span>Pages: </span></li>';
-
       for (var i = 1; i <= pages; i++) {
         if ( (i > breaks[0] && i < breaks[1]) || (i > breaks[2] && i < breaks[3])) {
           // skip to next iteration in loop
           continue;
         } else {
-          var li = obj.paginationLinks.buildLink(i, i, pageLinkClass, page == i, activePageClass),
+          /*var li = obj.paginationLinks.buildLink(i, i, pageLinkClass, page == i, activePageClass),
               breakIndex,
               nextBreak;
 
@@ -1361,17 +1359,15 @@
             var ellip = '<li><span class="dynatable-page-break">&hellip;</span></li>';
             li = breakIndex < 2 ? ellip + li : li + ellip;
           }
-
+          */
           if (settings.inputs.paginationPrev && i === 1) {
             var prevLi = obj.paginationLinks.buildLink(page - 1, settings.inputs.paginationPrev, pageLinkClass + ' ' + settings.inputs.paginationPrevClass, page === 1, disabledPageClass);
-            li = prevLi + li;
+            pageLinks += prevLi;
           }
           if (settings.inputs.paginationNext && i === pages) {
             var nextLi = obj.paginationLinks.buildLink(page + 1, settings.inputs.paginationNext, pageLinkClass + ' ' + settings.inputs.paginationNextClass, page === pages, disabledPageClass);
-            li += nextLi;
+            pageLinks += nextLi;
           }
-
-          pageLinks += li;
         }
       }
 

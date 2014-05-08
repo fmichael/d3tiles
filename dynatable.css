@@ -8,12 +8,44 @@
  *
  * Date: Tue Jan 02 2014
  */
+
+.table_cont {
+  max-height: 415px;
+  overflow: auto;
+}
+
+table {
+  border-spacing: 0;
+}
+
+th {
+  background: #aaa;color: #fff;
+  padding: 10px;
+  font-size: 16px;
+}
+
 th a {
   color: #fff;
 }
 th a:hover {
   color: #fff;
   text-decoration: underline;
+}
+
+tr:nth-child(even) {
+  background-color:#bbb;
+}
+
+tr:nth-child(odd) {
+  background-color:#ccc;
+}
+
+td {
+  padding: 10px;
+}
+
+td:first-child {
+
 }
 
 .dynatable-search {
@@ -23,6 +55,7 @@ th a:hover {
 
 .dynatable-pagination-links {
   float: right;
+  margin-right: 5px;
 }
 
 .dynatable-record-count {
@@ -33,6 +66,13 @@ th a:hover {
 .dynatable-pagination-links span,
 .dynatable-pagination-links li {
   display: inline-block;
+  background-color: #aaa;
+  border-radius: 3px;
+}
+
+.dynatable-pagination-links span:hover,
+.dynatable-pagination-links li:hover {
+  background-color:#ccc;
 }
 
 .dynatable-page-link,
@@ -55,15 +95,13 @@ th a:hover {
 }
 
 .dynatable-active-page {
-  background: #71AF5A;
-  border-radius: 5px;
-  color: #fff;
+
 }
 .dynatable-active-page:hover {
   color: #fff;
 }
-.dynatable-disabled-page,
-.dynatable-disabled-page:hover {
-  background: none;
+
+.dynatable-disabled-page {
+  background: none !important;
   color: #999;
 }
