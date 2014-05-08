@@ -198,3 +198,7 @@ button.setting_btn {
 .background_number {
     background: url(img/tile_number.png) no-repeat;
 }
+
+.background_map {
+    background: url(img/tile_map.png) no-repeat;
+}

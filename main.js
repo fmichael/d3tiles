@@ -75,6 +75,10 @@ $(document).ready(function() {
             type: 'chart',
             size: '2x2',
         },
+        twopfive: {
+            type: 'map',
+            size: '4x4',
+        },
         thr: {
             type: 'chart',
             size: '3x2',
