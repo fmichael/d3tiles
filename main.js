@@ -35,21 +35,32 @@ function toggleMarquee(obj) {
 }
 
 function makeData(opt) {
+    var data = [];
     if(opt == 'map') {
-        var mapdata = {
+        data = {
             coord1: {
                 lat: 51.505,
                 lon: -0.09,
             }
         };
-        return mapdata;
     }
-    var data = [];
-    for(var x = 0; x < (Math.floor(Math.random() * 5) + 1); x++) {
-        data[x] = [];
-        for(var y = 0; y < (Math.floor(Math.random() * 30) + 1); y++)
-            data[x][y] = Math.floor(Math.random() * 100) + 1;
+    else if (opt == 'table') {
+        for(var x = 0; x < 5; x++) {
+            data[x] = [];
+            var amt = Math.floor(Math.random() * 30) + 1;
+            for(var y = 0; y < amt; y++)
+                data[x][y] = Math.floor(Math.random() * 100) + 1;
+        }
+
     }
+    else if (opt == 'chart') {
+        for(var x = 0; x < (Math.floor(Math.random() * 5) + 1); x++) {
+            data[x] = [];
+            for(var y = 0; y < (Math.floor(Math.random() * 30) + 1); y++)
+                data[x][y] = Math.floor(Math.random() * 100) + 1;
+        }
+    }
+
     return data;
 }
 

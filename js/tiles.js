@@ -218,17 +218,18 @@ function tile(parent, id, x, y, type) {
         }
         else if (that.type == 'map') {
             if (that.map !== false)
-                that.map.remove();
+                that.map.remove(); //remove map to re-draw if needed (options may have changed, etc)
             that.map = L.map('drawable_'+that.id, {
-                layers: MQ.mapLayer(),
+                /*layers: MQ.mapLayer(), *///leaflet + mapquest free map_tiles
                 center: [ 40.731701, -73.993411 ],
                 zoom: 12
             });
-
-            //use the leaflet api to draw a charts
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+            }).addTo(that.map);
         }
         else if (that.type == 'table') {
-            console.log("Table");
+
         }
     };
 }
