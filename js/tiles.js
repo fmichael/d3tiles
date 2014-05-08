@@ -6,7 +6,8 @@ function tile(parent, id, x, y, type) {
     this.type = type;
     this.title = '';
     this.size = [x, y];
-    this.chart = null;
+    this.chart = false;
+    this.map = false;
     this.filters = {};
     this.settings = {};
 
@@ -205,6 +206,7 @@ function tile(parent, id, x, y, type) {
 
     this.drawChart = function() {
         if(that.type == 'chart') {
+            console.log("Chart");
             var settings = that.parent.settings;
             var filters = that.parent.filters;
             var chart = {};
@@ -215,16 +217,18 @@ function tile(parent, id, x, y, type) {
             that.generateChart(chart, mergeObjects(that.settings, settings), mergeObjects(that.filters, filters));
         }
         else if (that.type == 'map') {
-            var map = L.map('map', {
+            if (that.map !== false)
+                that.map.remove();
+            that.map = L.map('drawable_'+that.id, {
                 layers: MQ.mapLayer(),
-                center: [that.parent.data.coord1.lat,that.parent.data.coord1.lon],
-                zoom: 12,
+                center: [ 40.731701, -73.993411 ],
+                zoom: 12
             });
-            var marker = L.marker([that.parent.data.coord1.lat,that.parent.data.coord1.lon]).addTo(map);
-            L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.jpg',{
-                attribution: '<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
-            }).addTo(map);
+
             //use the leaflet api to draw a charts
+        }
+        else if (that.type == 'table') {
+            console.log("Table");
         }
     };
 }

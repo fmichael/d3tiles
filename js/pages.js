@@ -60,23 +60,38 @@ function screen(surf, baseTiles) {
 
     this.changeToPage = function(id) {
         if (typeof that.pageList[id] != "undefined" && that.activePage != id) {
-            if(that.activePage !== '') {
-                //$('#'+that.pageList[that.activePage].id).addClass('slideLeft');
-                //setTimeout(function() {
+
+            //if first page:
+            var slideIn = '';
+            var slideOut = '';
+            if(that.activePage === '') {
+                slideIn = 'floatTop';
+                that.pageList[id].drawPage(slideIn);
+                that.activePage = id;
+            }
+            else {
+                var newPage = $('.pageButton[page-id="'+id+'"').position().left;
+                var oldPage = $('.pageButton[page-id="'+that.activePage+'"').position().left;
+                if (newPage < oldPage) { //if sliding new from right
+                    slideIn = 'floatRightSlide';
+                    slideOut = 'floatLeftSlide';
+                }
+                else { //if sliding new from left
+                    slideIn = 'floatLeftSlide';
+                    slideOut = 'floatRightSlide';
+                }
+                that.pageList[id].drawPage(slideIn);
+                $('#'+that.activePage).addClass(slideOut);
+                setTimeout(function() {
                     that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
-                //}, 400);
+                    that.activePage = id;
+                }, 750);
             }
-            that.activePage = id;
-            if(that.pageList[id].stored === false) {
-                that.pageList[id].drawPage('floatTop');
-            }
-            else
-                that.drawSurface.append(that.pageList[id].stored);
         }
     };
 
     this.showNotifBar = function(autoclose) {
-        if(!that.menuOpen && $('.notifArea').children().length > 0)
+        if(!that.menuOpen && $('.notifArea').children().length > 0 && !that.dragging)
         {
             that.menuOpen = true;
             $('.notifBar').animate({
@@ -149,7 +164,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showTileDock = function() {
-        if(!that.tileBool && !that.modalOpen)
+        if(!that.tileBool && !that.modalOpen && !that.dragging)
         {
             that.tileBool = true;
             $('.tileDock').animate({
@@ -172,7 +187,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showDashDock = function() {
-        if(!that.dashBool && !that.modalOpen)
+        if(!that.dashBool && !that.modalOpen && !that.dragging)
         {
             that.dashBool = true;
             $('.dashDock').animate({
@@ -195,7 +210,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showSettingDock = function() {
-        if(!that.settBool && !that.modalOpen)
+        if(!that.settBool && !that.modalOpen && !that.dragging)
         {
             that.settBool = true;
             $('.topButtons').addClass('in');
@@ -405,9 +420,13 @@ function page(par, id, title) {
         }
     };
     this.drawPage = function(location) {
-        that.parent.drawSurface.append('<div id="'+that.id+'" class="page '+((location === undefined) ? '' : location)+'"><div class="con_page"></div></div>');
-        for(var iter in that.groupList)
-            that.groupList[iter].drawGroup();
+        if (!that.stored) {
+            that.parent.drawSurface.append('<div id="'+that.id+'" class="page '+((location === undefined) ? '' : location)+'"><div class="con_page"></div></div>');
+            for(var iter in that.groupList)
+                that.groupList[iter].drawGroup();
+        }
+        else
+            that.parent.drawSurface.append(that.stored);
         $('#'+that.id).addClass(location+'Slide');
         setTimeout(function() {
             $('#'+that.id).removeClass(location);

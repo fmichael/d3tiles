@@ -11,7 +11,7 @@
         <script type="text/javascript" src="jquery-ui.js"></script>
         <script type="text/javascript" src="d3.js"></script>
         <script type="text/javascript" src="c3.js"></script>
-        <script type="text/javascript" src="leaflet.js"></script>
+        <script type="text/javascript" src="leaflet-src.js"></script>
         <script src="http://www.mapquestapi.com/sdk/leaflet/v1.0/mq-map.js?key=Fmjtd%7Cluur2d6yn9%2C2l%3Do5-9abg0z"></script>
         <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="js/pages.js"></script>

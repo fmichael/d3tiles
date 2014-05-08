@@ -1,10 +1,12 @@
 .tile {
     background-color: #ddd;
-    border: 1px solid #aaa;
+    border: 1px solid rgba(0,0,0,0.5);
     border-radius:3px;
     float: left;
     margin: 10px;
     position: relative;
+    box-shadow: 5px 5px 6px -1px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 
 .tile.flipped, .back {
@@ -118,17 +120,30 @@
     width: 100%;
     height: 25px;
     z-index:100;
+    cursor: pointer;
+    -webkit-transition: opacity .25s ease-in-out;
+    transition: opacity .25s ease-in-out;
 }
 
 .setting_span:hover {
-    height: 28px;
     background-color: #ddd;
+}
+
+.front .setting_span {
+    opacity: 0;
+}
+
+.front .setting_span:hover {
+    background-color: rgba(0,0,0,0.5);
+    opacity: 1;
+    box-shadow: 0px 2px 10px 6px rgba(0,0,0,0.5);
 }
 
 button.setting_btn {
     width: 20px;
     height: 20px;
     margin: 2px;
+    margin-top: 3px;
 }
 
 .setting_btn {
@@ -142,6 +157,13 @@ button.setting_btn {
     position: relative;
     margin: 3px;
     cursor: -webkit-grab;
+}
+
+.tile_title {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 100;
+    letter-spacing: 0.5px;
 }
 
 .too_long {
