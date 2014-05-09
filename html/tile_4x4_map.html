@@ -40,7 +40,6 @@
             else
                 $('.form > .title > input').removeClass('error');
             var groupid = viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
-            console.log(groupid);
             viewable.pageList[viewable.activePage].groupList[groupid].addData(makeData('map'));
             viewable.pageList[viewable.activePage].groupList[groupid].addTile('tile_', 4, 4, 'map');
             viewable.closeModal('floatRightSlide');

@@ -30,7 +30,7 @@ function tile(parent, id, x, y, type) {
                     $('#'+that.id).find('.title_area').css('width', width+'px');
                     $('#'+that.id).find('.title_area > span').addClass('too_long');
                 }
-                that.drawChart();
+                that.startDraw();
             });
         } else {
             $('#'+that.id).append($(that.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type]).filter('.front, .back'));
@@ -41,7 +41,7 @@ function tile(parent, id, x, y, type) {
                 $('#'+that.id).find('.title_area').css('width', width+'px');
                 $('#'+that.id).find('.title_area > span').addClass('too_long');
             }
-            that.drawChart();
+            that.startDraw();
         }
 
         $('#'+that.id).draggable({
@@ -91,7 +91,8 @@ function tile(parent, id, x, y, type) {
                 }, 300);
                 setTimeout(function() {
                     $(thee).closest('.tile').removeClass('flipping');
-                    that.drawChart();
+                    if($(thee).hasClass('save_btn'))
+                        that.startDraw();
                 }, 400);
             }
         });
@@ -224,7 +225,7 @@ function tile(parent, id, x, y, type) {
         }
     };
 
-    this.drawChart = function() {
+    this.startDraw = function() {
         if(that.type == 'chart') {
             var settings = that.parent.settings;
             var filters = that.parent.filters;
