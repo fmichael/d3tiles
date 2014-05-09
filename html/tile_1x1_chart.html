@@ -1,0 +1,49 @@
+<div class='front'>
+    <div class='setting_span'>
+        <button class='setting_btn fill_btn'>Y</button>
+        <span class='setting_btn title_area'><span class='tile_title'></span></span>
+        <button class='setting_btn swap_btn pull-right'>X</button>
+    </div>
+    <div class='contents'></div>
+</div>
+<div class='back'>
+    <div class='setting_span'>
+        <button class='swap_btn save_btn first'>Save</button>
+    </div>
+    <div class='contents'>
+        <div class='settings'>
+            <input setFilt='label' class='label' type='text' value='Enter Label'></input><br />
+        </div>
+        <div class='filter'>
+            Min: <input setFilt='min' class='min' type='input' /><br />
+            Max: <input setFilt='max' class='max' type='input' /><br />
+        </div>
+    </div>
+</div>
+
+<div class="tile_1x1_chart_modal modal floatLeftSlide">
+    <input type='hidden' value='new_1x1_chart_tile' />
+    <span class="closeModalButton">x</span>
+    <span class="title">Create a new 1x1 Chart Tile</span>
+    <div class="form">
+        <span class='title'>Title: <input type='text' required></input></span>
+    </div>
+    <div class="footer">
+        <button class="cancelButton">Cancel</button>
+        <button class="confirmButton">Confirm</button>
+    </div>
+    <script> /* Validation Code, Confirmation Code, etc */
+        $('.confirmButton').on('click', function() {
+            if($('.form > .title > input').val() == '') {
+                $('.form > .title > input').addClass('error');
+                return;
+            }
+            else
+                $('.form > .title > input').removeClass('error');
+            viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
+            viewable.pageList[viewable.activePage].groupList['group_'+viewable.activePage].addData(makeData('chart'));
+            viewable.pageList[viewable.activePage].groupList['group_'+viewable.activePage].addTile('tile_'+viewable.activePage, 1, 1, 'chart');
+            viewable.closeModal('floatRightSlide');
+        });
+    </script>
+</div>
