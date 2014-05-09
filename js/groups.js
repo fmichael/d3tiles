@@ -24,7 +24,8 @@ function group(par, id) {
     };
 
     this.addTile = function(id, x, y, type) {
-        that.tileList[id] = new tile(that, id+'_'+that.id+'_'+(that.numTiles++), x, y, type);
+        that.tileList[id+'_'+that.id+'_'+(that.numTiles)] = new tile(that, id+'_'+that.id+'_'+(that.numTiles), x, y, type);
+        return id+'_'+that.id+'_'+(that.numTiles++);
     };
 
     this.removeAllTiles = function() {

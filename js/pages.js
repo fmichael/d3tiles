@@ -399,7 +399,8 @@ function page(par, id, title) {
     };
 
     this.addGroup = function(id) {
-        that.groupList[id] = new group(that, id+'_'+(that.numGroups++));
+        that.groupList[id+'_'+(that.numGroups)] = new group(that, id+'_'+(that.numGroups));
+        return id+'_'+(that.numGroups++);
     };
     this.removeGroup = function(id) {
         try {

@@ -51,9 +51,10 @@
             }
             else
                 $('.form > .title > input').removeClass('error');
-            viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
-            viewable.pageList[viewable.activePage].groupList['group_'+viewable.activePage].addData(makeData('chart'));
-            viewable.pageList[viewable.activePage].groupList['group_'+viewable.activePage].addTile('tile_'+viewable.activePage, 3, 2, 'chart');
+            var groupid = viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
+            console.log(groupid);
+            viewable.pageList[viewable.activePage].groupList[groupid].addData(makeData('chart'));
+            viewable.pageList[viewable.activePage].groupList[groupid].addTile('tile_', 3, 2, 'chart');
             viewable.closeModal('floatRightSlide');
         });
     </script>

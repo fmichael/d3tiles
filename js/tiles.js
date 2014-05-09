@@ -33,7 +33,6 @@ function tile(parent, id, x, y, type) {
                 that.drawChart();
             });
         } else {
-            console.log(that.id, that.parent.parent.parent.htmlStorage, 'tile_'+x+'x'+y+'_'+type);
             $('#'+that.id).append($(that.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type]).filter('.front, .back'));
             $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
@@ -218,7 +217,10 @@ function tile(parent, id, x, y, type) {
                 };
             }
             stuff.data.groups = [['data1', 'blablablabla', 'data3']];
-            chart = c3.generate(stuff);
+            if (that.chart !== false)
+                that.chart.load(stuff);
+            else
+                that.chart = c3.generate(stuff);
         }
     };
 
