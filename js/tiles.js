@@ -104,7 +104,8 @@ function tile(parent, id, x, y, type) {
         });
 
         $('#'+that.id).on('click', '.save_btn', function() {
-            if(that.type == 'chart') {
+            console.log(that.type);
+            if(that.type == 'chart' || that.type == 'table') {
                 $(this).closest('.back').find('.contents').children().each(function() {
                     var which = 'settings';
                     if ($(this).hasClass('settings'))
@@ -266,6 +267,7 @@ function tile(parent, id, x, y, type) {
             }
             appender += '</tbody></table></div>';
             $('#drawable_'+that.id).append(appender);
+            console.log(that.settings);
             $('#table_'+that.id).dynatable({
                 features: that.settings,
                 dataset: {
