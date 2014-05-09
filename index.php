@@ -15,7 +15,8 @@
         <script type="text/javascript" src="leaflet-src.js"></script>
         <script type="text/javascript" src="dynatable.js"></script>
         <script type="text/javascript" src="main.js"></script>
-        <script type="text/javascript" src="js/pages.js"></script>
+        <script type="text/javascript" src="js/screen.js"></script>
+        <script type="text/javascript" src="js/page.js"></script>
         <script type="text/javascript" src="js/groups.js"></script>
         <script type="text/javascript" src="js/tiles.js"></script>
 
