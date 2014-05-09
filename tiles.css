@@ -98,7 +98,6 @@
 }
 
 .front.flipped {
-    display: none;
     opacity: 0;
 }
 
@@ -244,8 +243,6 @@ button.setting_btn {
 .background_map {
     background: url(img/tile_map.png) no-repeat;
 }
-
-/* Tile Type Specific Styles */
 
 .tile[tile-type='table'] .dynatable-record-count {
     position: absolute;
