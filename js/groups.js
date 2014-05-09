@@ -7,6 +7,7 @@ function group(par, id) {
     this.filters = {};
     this.settings = {};
     this.tileList = {};
+    this.numTiles = 0;
 
     var that = this;
 
@@ -23,7 +24,7 @@ function group(par, id) {
     };
 
     this.addTile = function(id, x, y, type) {
-        that.tileList[id] = new tile(that, id, x, y, type);
+        that.tileList[id] = new tile(that, id+'_'+that.id+'_'+(that.numTiles++), x, y, type);
     };
 
     this.removeAllTiles = function() {
@@ -52,4 +53,8 @@ function group(par, id) {
         for(var iter in that.tileList)
             that.tileList[iter].drawTile();
     };
+
+    if(that.parent.parent.activePage == that.parent.id) { //if adding tile to current page
+        that.drawGroup();
+    }
 }

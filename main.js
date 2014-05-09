@@ -74,7 +74,6 @@ function makeData(opt) {
             }
         }
     }
-    console.log(opt);
     return data;
 }
 

@@ -18,7 +18,7 @@ function screen(surf, baseTiles) {
 
     this.dragging = false; //if we are moving a tile
     this.modalOpen = false;
-    this.modalStorage = {};
+    this.htmlStorage = {};
     this.tileStorage = {};
 
     this.addPage = function(id, title) {
@@ -164,7 +164,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showTileDock = function() {
-        if(!that.tileBool && !that.modalOpen && !that.dragging)
+        if(!that.tileBool && !that.modalOpen && !that.dragging && that.activePage !== '')
         {
             that.tileBool = true;
             $('.tileDock').animate({
@@ -239,16 +239,23 @@ function screen(surf, baseTiles) {
 
     this.addModal = function(file, extra) {
         that.modalOpen = true;
+        extra = (extra === undefined) ? '' : '_'+extra;
         that.hideDashDock();
+        that.hideTileDock();
         that.drawSurface.append('<div class="modalBack opacityFade"></div>');
-        if(that.modalStorage[file] === undefined) {
-            $.get('html/'+file+'.html', function(result) {
-                that.modalStorage[file] = result;
-                that.privOpenModal(result); //store obj so we don't fetch again
-            });
+        if(that.htmlStorage[file+extra] === undefined) {
+            try {
+                $.get('html/'+file+extra+'.html', function(result) { //may be a tile or modal, etc
+                    that.htmlStorage[file+extra] = result;
+                    that.privOpenModal($(result).filter('.modal')); //store obj so we don't fetch again
+                });
+            }
+            catch(err) {
+                console.error("Failed to Load Page: "+err.message);
+            }
         }
         else
-            that.privOpenModal(that.modalStorage[file]);
+            that.privOpenModal($(that.htmlStorage[file+extra]).filter('.modal'));
     };
 
     this.privOpenModal = function(obj) {
@@ -324,7 +331,7 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('click', '.miniTile', function() {
-        that.addModal('tileForm', $(this).attr('tile-url'));
+        that.addModal('tile', $(this).attr('tile-url'));
     });
 
     this.drawSurface.on('click', '.pageButton', function(){
@@ -384,6 +391,7 @@ function page(par, id, title) {
     this.title = title;
     this.stored = false;
     this.groupList = {};
+    this.numGroups = 0;
     var that = this;
 
     this.changeTitle = function(title) {
@@ -391,9 +399,7 @@ function page(par, id, title) {
     };
 
     this.addGroup = function(id) {
-        that.groupList[id] = new group(that, id);
-        if(that.parent.activePage == that.id)
-            $('#'+that.id).append('<div id="'+id+'"></div>');
+        that.groupList[id] = new group(that, id+'_'+(that.numGroups++));
     };
     this.removeGroup = function(id) {
         try {

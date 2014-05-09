@@ -19,9 +19,6 @@
                 $('.form > .title > input').removeClass('error');
             viewable.addPage($('.form > .title > input').val(), $('.form > .title > input').val());
             viewable.closeModal('floatBottomSlide');
-            viewable.pageList[''+$('.form > .title > input').val()].addGroup('group_'+$('.form > .title > input').val());
-            viewable.pageList[''+$('.form > .title > input').val()].groupList['group_'+$('.form > .title > input').val()].addData(makeData('chart'));
-            viewable.pageList[''+$('.form > .title > input').val()].groupList['group_'+$('.form > .title > input').val()].addTile('tile_'+$('.form > .title > input').val(), 1, 1, 'chart');
         });
     </script>
 </div>

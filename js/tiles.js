@@ -12,34 +12,35 @@ function tile(parent, id, x, y, type) {
     this.settings = {};
 
     var that = this;
-    if(that.parent.parent.parent.activePage == that.parent.parent.id) { //if adding tile to current page
-        that.initializeListeners();
-    }
 
     this.initializeListeners = function() {
         $('#'+that.parent.id).append("<div id='"+that.id+"' tile-type='"+that.type+"' class='tile tile_"+x+"x"+y+"'>");
+        if (that.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type] === undefined) {
 
-        if (that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type] === undefined) {
-            $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
-                that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type] = result;
-                $('#'+id).append(result);
-                $('#'+id+' .contents').attr('id', 'drawable_'+id);
-                var innerWidth = $('#'+id).find('.title_area').outerWidth();
-                var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
+            $.get('html/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
+                that.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type] = result;
+
+                $('#'+that.id).append($(result).filter('.front, .back'));
+                $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
+
+                var innerWidth = $('#'+that.id).find('.title_area').outerWidth();
+                var width = $('#'+that.id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+that.id).find('button.setting_btn').outerWidth(true));
+
                 if (innerWidth > width) {
-                    $('#'+id).find('.title_area').css('width', width+'px');
-                    $('#'+id).find('.title_area > span').addClass('too_long');
+                    $('#'+that.id).find('.title_area').css('width', width+'px');
+                    $('#'+that.id).find('.title_area > span').addClass('too_long');
                 }
                 that.drawChart();
             });
         } else {
-            $('#'+id).append(that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type]);
-            $('#'+id+' .contents').attr('id', 'drawable_'+id);
+            console.log(that.id, that.parent.parent.parent.htmlStorage, 'tile_'+x+'x'+y+'_'+type);
+            $('#'+that.id).append($(that.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type]).filter('.front, .back'));
+            $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
-            var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
+            var width = $('#'+that.id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+that.id).find('button.setting_btn').outerWidth(true));
             if (innerWidth > width) {
-                $('#'+id).find('.title_area').css('width', width+'px');
-                $('#'+id).find('.title_area > span').addClass('too_long');
+                $('#'+that.id).find('.title_area').css('width', width+'px');
+                $('#'+that.id).find('.title_area > span').addClass('too_long');
             }
             that.drawChart();
         }
@@ -104,7 +105,6 @@ function tile(parent, id, x, y, type) {
         });
 
         $('#'+that.id).on('click', '.save_btn', function() {
-            console.log(that.type);
             if(that.type == 'chart' || that.type == 'table' || that.type == 'number') {
                 $(this).closest('.back').find('.contents').children().each(function() {
                     var which = 'settings';
@@ -224,7 +224,6 @@ function tile(parent, id, x, y, type) {
 
     this.drawChart = function() {
         if(that.type == 'chart') {
-            console.log("Chart");
             var settings = that.parent.settings;
             var filters = that.parent.filters;
             var chart = {};
@@ -267,7 +266,6 @@ function tile(parent, id, x, y, type) {
             }
             appender += '</tbody></table></div>';
             $('#drawable_'+that.id).append(appender);
-            console.log(that.settings);
             $('#table_'+that.id).dynatable({
                 features: that.settings,
                 dataset: {
@@ -315,4 +313,8 @@ function tile(parent, id, x, y, type) {
             $('#drawable_'+that.id).append('<span class="number">'+num+'</span><span class="label">'+str+'</span');
         }
     };
+
+    if(that.parent.parent.parent.activePage == that.parent.parent.id) { //if adding tile to current page
+        that.initializeListeners();
+    }
 }
