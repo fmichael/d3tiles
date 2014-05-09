@@ -56,8 +56,6 @@ function makeData(opt) {
             for(var y = 0; y < amt; y++)
                 data[word][y] = Math.floor(Math.random() * 100) + 1;
         }
-        console.log(data);
-
     }
     else if (opt == 'chart') {
         for(var x = 0; x < (Math.floor(Math.random() * 5) + 1); x++) {
@@ -66,7 +64,17 @@ function makeData(opt) {
                 data[x][y] = Math.floor(Math.random() * 100) + 1;
         }
     }
-
+    else if (opt == 'number') {
+        if(Math.floor(Math.random() * 2)+1 == 6) { //send just a number to the tile
+            data = Math.floor(Math.random() * 500)+1;
+        }
+        else { //send an array of data
+            for(var x = 0; x < (Math.floor(Math.random() * 1000) + 50); x++) {
+                data[x] = Math.floor(Math.random() * 10) + 1;
+            }
+        }
+    }
+    console.log(opt);
     return data;
 }
 

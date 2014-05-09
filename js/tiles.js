@@ -105,7 +105,7 @@ function tile(parent, id, x, y, type) {
 
         $('#'+that.id).on('click', '.save_btn', function() {
             console.log(that.type);
-            if(that.type == 'chart' || that.type == 'table') {
+            if(that.type == 'chart' || that.type == 'table' || that.type == 'number') {
                 $(this).closest('.back').find('.contents').children().each(function() {
                     var which = 'settings';
                     if ($(this).hasClass('settings'))
@@ -274,6 +274,45 @@ function tile(parent, id, x, y, type) {
                     records: objects
                 }
             });
+        }
+        else if (that.type == 'number') {
+            var num = 0;
+            var str = (that.settings.label == undefined) ? '' : that.settings.label;
+            var type = (that.settings.type == undefined) ? 'count' : that.settings.type;
+            if(typeof that.parent.data == 'number') { //a single data value was returned
+                num = that.parent.data;
+            }
+            else {
+                switch(type) {
+                    case 'count':
+                        num = that.parent.data.length;
+                        break;
+                    case 'sum':
+                        for(var x in that.parent.data)
+                            num += that.parent.data[x];
+                        break;
+                    case 'min':
+                        num = that.parent.data[0];
+                        for(var x in that.parent.data)
+                            if(num > that.parent.data[x])
+                                num = that.parent.data[x];
+                        break;
+                    case 'max':
+                        num = that.parent.data[0];
+                        for(var x in that.parent.data)
+                            if(num < that.parent.data[x])
+                                num = that.parent.data[x];
+                        break;
+                    case 'average':
+                        var ttl = that.parent.data.length;
+                        for(var x in that.parent.data)
+                            num += that.parent.data[x];
+                        num = parseFloat((num / ttl).toFixed(2));
+                }
+            }
+            //output to boxy box
+            $('#drawable_'+that.id).empty();
+            $('#drawable_'+that.id).append('<span class="number">'+num+'</span><span class="label">'+str+'</span');
         }
     };
 }

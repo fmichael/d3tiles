@@ -12,7 +12,15 @@
     </div>
     <div class='contents'>
         <div class='settings'>
-            <input setFilt='label' class='label' type='text' value='Enter Label'></input><br />
+            <input setFilt='label'type='text' value='Enter Label'></input><br />
+            <select setFilt='type'>
+                <!--<option value='percent'>Percent</option> SPECIAL CASE-->
+                <option value='max'>Max</option>
+                <option value='min'>Min</option>
+                <option value='sum'>Sum</option>
+                <option value='count'>Count</option>
+                <option value='average'>Average</option>
+            </select>
         </div>
         <div class='filter'>
             Min: <input setFilt='min' class='min' type='input' /><br />
