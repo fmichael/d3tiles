@@ -10,7 +10,6 @@
  */
 
 .table_cont {
-  max-height: 415px;
   overflow: auto;
 }
 
@@ -44,17 +43,11 @@ td {
   padding: 10px;
 }
 
-td:first-child {
-
-}
-
 .dynatable-search {
   float: right;
-  margin-bottom: 10px;
 }
 
-.dynatable-pagination-links {
-  float: right;
+.dynatable-pagination-links > li {
   margin-right: 5px;
 }
 
@@ -94,9 +87,6 @@ td:first-child {
   text-decoration: none;
 }
 
-.dynatable-active-page {
-
-}
 .dynatable-active-page:hover {
   color: #fff;
 }

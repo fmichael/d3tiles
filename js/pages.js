@@ -19,6 +19,7 @@ function screen(surf, baseTiles) {
     this.dragging = false; //if we are moving a tile
     this.modalOpen = false;
     this.modalStorage = {};
+    this.tileStorage = {};
 
     this.addPage = function(id, title) {
         that.pageList[id] = new page(that, id, title);
@@ -424,8 +425,9 @@ function page(par, id, title) {
             for(var iter in that.groupList)
                 that.groupList[iter].drawGroup();
         }
-        else
+        else {
             that.parent.drawSurface.append(that.stored);
+        }
         $('#'+that.id).addClass(location+'Slide');
         setTimeout(function() {
             $('#'+that.id).removeClass(location);

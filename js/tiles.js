@@ -19,9 +19,20 @@ function tile(parent, id, x, y, type) {
     this.initializeListeners = function() {
         $('#'+that.parent.id).append("<div id='"+that.id+"' tile-type='"+that.type+"' class='tile tile_"+x+"x"+y+"'>");
 
-        $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
-            $('#'+id).append(result);
-            $('#'+id+' .contents').attr('id', 'drawable_'+id);
+        if (that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type] === undefined) {
+            $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
+                that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type] = result;
+                $('#'+id).append(result);
+                var innerWidth = $('#'+id).find('.title_area').outerWidth();
+                var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
+                if (innerWidth > width) {
+                    $('#'+id).find('.title_area').css('width', width+'px');
+                    $('#'+id).find('.title_area > span').addClass('too_long');
+                }
+                that.drawChart();
+            });
+        } else {
+            $('#'+id).append(that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type]);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
             var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
             if (innerWidth > width) {
@@ -29,7 +40,7 @@ function tile(parent, id, x, y, type) {
                 $('#'+id).find('.title_area > span').addClass('too_long');
             }
             that.drawChart();
-        });
+        }
 
         $('#'+that.id).draggable({
             opacity: 0.35,
@@ -37,6 +48,7 @@ function tile(parent, id, x, y, type) {
             snapMode: 'outer',
             containment: "#tileable",
             handle: '.setting_span',
+            cursorAt: {left: (that.size[0]*150/2), top: 10},
         });
 
         $('#'+that.id).on('dragstart', function(e, ui) { //moving tile around
@@ -97,6 +109,7 @@ function tile(parent, id, x, y, type) {
                         which = 'settings';
                     else if ($(this).hasClass('filter'))
                         which = 'filters';
+
                     $(this).children().each(function() {
                         var value = false;
                         var found = false;
@@ -164,7 +177,9 @@ function tile(parent, id, x, y, type) {
     };
 
     this.drawTile = function() {
-        that.initializeListeners();
+        setTimeout(function() {
+            that.initializeListeners();
+        }, 500);
     };
 
     this.generateChart = function(options, settings, filters) {
@@ -210,7 +225,7 @@ function tile(parent, id, x, y, type) {
             var settings = that.parent.settings;
             var filters = that.parent.filters;
             var chart = {};
-            chart.bindto = '#drawable_'+that.id;
+            chart.bindto = '#'+that.id+' > .front > .contents';
             chart.type = 'area';
             chart.size = [150 * that.size[0], 150 * that.size[1]];
             chart.data = that.parent.data;
@@ -231,76 +246,26 @@ function tile(parent, id, x, y, type) {
         else if (that.type == 'table') {
             $('#drawable_'+that.id).empty();
             var appender = '<div class="table_cont"><table id="table_'+that.id+'" class="table table-bordered"><thead>';
-            var columns = [];
-            //for(var iter in that.parent.data)
-                //appender += '<th>'+iter+'</th>';
-                appender += "<th>band</th><th>song</th>";
-            appender += '</thead><tbody></div>';
-            //create json object
-            /*var obj = {};
+            var objects = {};
+            var amt = 0;
             for(var iter in that.parent.data) {
-                for(var innerIter in that.parent.data[iter]) {
-                    obj
-                }
-            }*/
-            var json = '['+
-              '{'+
-                '"band": "Weezer",'+
-                '"song": "El Scorcho"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '},'+
-              '{'+
-                '"band": "Chevelle",'+
-                '"song": "Family System"'+
-              '}'+
-            ']';
+                appender += '<th>'+iter+'</th>';
+            }
+            console.log(amt, objects);
+            for(var iter in that.parent.data) {
+                for(var iterator in that.parent.data[iter]) {
 
-            appender += '</tbody></table>';
+                    amt++;
+                }
+                amt = 0;
+            }
+            appender += '</thead><tbody>';
+            //create json object
+
+            appender += '</tbody></table></div>';
             $('#drawable_'+that.id).append(appender);
             $('#table_'+that.id).dynatable({
-                search: false,
-                dataset: {
-                    records: JSON.parse(json)
-                },
+                features: that.settings,
             });
         }
     };

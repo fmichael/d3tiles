@@ -130,7 +130,6 @@
     width: 100%;
     height: 25px;
     z-index:100;
-    cursor: pointer;
     -webkit-transition: opacity .25s ease-in-out;
     transition: opacity .25s ease-in-out;
 }
@@ -141,6 +140,7 @@
 
 .front .setting_span {
     opacity: 0;
+    cursor: pointer;
 }
 
 .front .setting_span:hover {
@@ -252,21 +252,33 @@ button.setting_btn {
     left: 0;
     bottom: 0;
     padding: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 .tile[tile-type='table'] .dynatable-pagination-links {
     position: absolute;
     right: 0;
     bottom: 0;
-    margin-bottom: 5px;
+    margin-bottom: 13px;
 }
 
 .tile[tile-type='table'] .dynatable-per-page {
     position: absolute;
     bottom: 0;
-    left: 43%;
-    margin-bottom: 5px;
+    left: 45%;
+    margin-bottom: 15px;
+}
+
+.tile[tile-type='table'] .dynatable-search {
+    position: absolute;
+    bottom: 20px;
+    margin-bottom: 3px;
+    left: 0;
+    margin-left: 5px;
+}
+
+.tile[tile-type='table'].tile_3x3 .table_cont {
+    max-height: 401px;
 }
 
 .tile[tile-type='table'] table.table {

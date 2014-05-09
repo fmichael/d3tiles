@@ -83,7 +83,7 @@
       perPageTarget: null,
       perPagePlacement: 'before',
       perPageText: 'Show: ',
-      recordCountText: 'Showing ',
+      recordCountText: '',
       processingText: 'Processing...'
     },
     dataset: {
