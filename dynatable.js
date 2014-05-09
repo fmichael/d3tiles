@@ -276,10 +276,9 @@
     var tr = '';
 
     // grab the record's attribute for each column
-    for (var i = 0, len = columns.length; i < len; i++) {
+    for (var i in columns) {
       tr += cellWriter(columns[i], record);
     }
-
     return '<tr>' + tr + '</tr>';
   };
 
@@ -302,7 +301,6 @@
 
       td += '"';
     }
-
     return td + '>' + html + '</td>';
   };
 
@@ -439,7 +437,7 @@
     this.add = function($column, position, skipAppend, skipUpdate) {
       var columns = settings.table.columns,
           label = $column.text(),
-          id = $column.data('dynatable-column') || utility.normalizeText(label, settings.table.defaultColumnIdStyle),
+          id = $column.data('dynatable-column') || /*utility.normalizeText(*/label/*, settings.table.defaultColumnIdStyle)*/,
           dataSorts = $column.data('dynatable-sorts'),
           sorts = dataSorts ? $.map(dataSorts.split(','), function(text) { return $.trim(text); }) : [id];
 

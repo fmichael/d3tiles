@@ -45,13 +45,18 @@ function makeData(opt) {
         };
     }
     else if (opt == 'table') {
-        var amt = Math.floor(Math.random() * 30) + 1;
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var amt = Math.floor(Math.random() * 1000) + 50;
         for(var x = 0; x < 5; x++) {
-            data[x] = [];
+            var word = '';
+            for (var y = 0; y < 5; y++)
+                word+= possible.charAt(Math.floor(Math.random() * possible.length));
+            data[word] = [];
 
             for(var y = 0; y < amt; y++)
-                data[x][y] = Math.floor(Math.random() * 100) + 1;
+                data[word][y] = Math.floor(Math.random() * 100) + 1;
         }
+        console.log(data);
 
     }
     else if (opt == 'chart') {
@@ -83,6 +88,8 @@ $(window).resize(function(){
 var viewable;
 
 $(document).ready(function() {
+    window.history.pushState({}, '', window.location.origin+window.location.pathname);
+
     var tileList = {
         one: {
             type: 'chart',

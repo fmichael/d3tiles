@@ -23,6 +23,7 @@ function tile(parent, id, x, y, type) {
             $.get('tiles/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
                 that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type] = result;
                 $('#'+id).append(result);
+                $('#'+id+' .contents').attr('id', 'drawable_'+id);
                 var innerWidth = $('#'+id).find('.title_area').outerWidth();
                 var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
                 if (innerWidth > width) {
@@ -33,6 +34,7 @@ function tile(parent, id, x, y, type) {
             });
         } else {
             $('#'+id).append(that.parent.parent.parent.tileStorage['tile_'+x+'x'+y+'_'+type]);
+            $('#'+id+' .contents').attr('id', 'drawable_'+id);
             var innerWidth = $('#'+id).find('.title_area').outerWidth();
             var width = $('#'+id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+id).find('button.setting_btn').outerWidth(true));
             if (innerWidth > width) {
@@ -225,7 +227,7 @@ function tile(parent, id, x, y, type) {
             var settings = that.parent.settings;
             var filters = that.parent.filters;
             var chart = {};
-            chart.bindto = '#'+that.id+' > .front > .contents';
+            chart.bindto = '#drawable_'+that.id;
             chart.type = 'area';
             chart.size = [150 * that.size[0], 150 * that.size[1]];
             chart.data = that.parent.data;
@@ -246,26 +248,29 @@ function tile(parent, id, x, y, type) {
         else if (that.type == 'table') {
             $('#drawable_'+that.id).empty();
             var appender = '<div class="table_cont"><table id="table_'+that.id+'" class="table table-bordered"><thead>';
-            var objects = {};
-            var amt = 0;
+            var objects = [];
+            var length = 0;
             for(var iter in that.parent.data) {
                 appender += '<th>'+iter+'</th>';
-            }
-            console.log(amt, objects);
-            for(var iter in that.parent.data) {
-                for(var iterator in that.parent.data[iter]) {
-
-                    amt++;
-                }
-                amt = 0;
+                length = that.parent.data[iter].length;
             }
             appender += '</thead><tbody>';
-            //create json object
 
+            for(var x = 0; x < length; x++) {
+                objects[x]= {};
+            }
+            for(var iter in that.parent.data) {
+                for(var iteriter in that.parent.data[iter]) {
+                    objects[iteriter][iter] = that.parent.data[iter][iteriter];
+                }
+            }
             appender += '</tbody></table></div>';
             $('#drawable_'+that.id).append(appender);
             $('#table_'+that.id).dynatable({
                 features: that.settings,
+                dataset: {
+                    records: objects
+                }
             });
         }
     };
