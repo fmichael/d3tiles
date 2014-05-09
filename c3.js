@@ -109,8 +109,8 @@
         var __size_width = getConfig(['size', 'width']),
             __size_height = getConfig(['size', 'height']);
 
-        var __padding_left = getConfig(['padding', 'left'], 50),
-            __padding_right = getConfig(['padding', 'right'], 0),
+        var __padding_left = getConfig(['padding', 'left'], 35),
+            __padding_right = getConfig(['padding', 'right'], 15),
             __padding_top = getConfig(['padding', 'top'], 0),
             __padding_bottom = getConfig(['padding', 'bottom'], 0);
 

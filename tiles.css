@@ -6,7 +6,7 @@
     margin: 10px;
     position: relative;
     box-shadow: 5px 5px 6px -1px rgba(0,0,0,0.5);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .tile > .front > .contents {
