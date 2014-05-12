@@ -1,5 +1,4 @@
 // screen (collection of page)
-
 function screen(surf, baseTiles) {
 
     this.pageList = {};
