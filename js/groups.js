@@ -22,8 +22,8 @@ function group(par, id) {
         that.settings = settings;
     };
 
-    this.addTile = function (id, x, y, type) {
-        that.tileList[id + '_' + that.id + '_' + (that.numTiles)] = new tile(that, id + '_' + that.id + '_' + (that.numTiles), x, y, type);
+    this.addTile = function (id, x, y, type, title, settings, filters) {
+        that.tileList[id + '_' + that.id + '_' + (that.numTiles)] = new tile(that, id + '_' + that.id + '_' + (that.numTiles), x, y, type, title, settings, filters);
         return id + '_' + that.id + '_' + (that.numTiles++);
     };
 

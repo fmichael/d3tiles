@@ -89,6 +89,11 @@ button:hover {
     margin-right: auto;
 }
 
+.pageButton.current {
+    background-color: #A5A3D8 !important;
+    cursor: default !important;
+}
+
 .visible {
     display: inline !important;
 }
@@ -389,17 +394,27 @@ i[class^='icon_']:hover {
     background-color: #333;
 }
 
-.dashDock button.pageButton, #addAPage {
+.dashDock > .container {
+    list-style: none;
+    height: 65px;
+}
+
+.dashDock li.pageButton, #addAPage {
+    float: left;
 	height:50px;
 	width:50px;
 	margin: 13px;
+    margin-top: 0;
 	background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 3px;
+    text-align: center;
+    line-height: 50px;
     outline: -webkit-focus-ring-color auto 0px !important;
+    overflow: hidden;
 }
 
-.dashDock button.pageButton:hover, #addAPage:hover {
+.dashDock li.pageButton:hover, #addAPage:hover {
 	cursor: pointer;
 	background-color: #ddd;
 }

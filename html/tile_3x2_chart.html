@@ -51,9 +51,13 @@
             }
             else
                 $('.form > .title > input').removeClass('error');
+
+            var filters = {};
+            var settings = {};
+
             var groupid = viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
             viewable.pageList[viewable.activePage].groupList[groupid].addData(makeData('chart'));
-            viewable.pageList[viewable.activePage].groupList[groupid].addTile('tile_', 3, 2, 'chart');
+            var tileid = viewable.pageList[viewable.activePage].groupList[groupid].addTile('tile_', 3, 2, 'chart', $('.form > .title > input').val(), settings, filters);
             viewable.closeModal('floatRightSlide');
         });
     </script>

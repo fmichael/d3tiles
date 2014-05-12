@@ -25,7 +25,7 @@ function page(par, id, title) {
             delete that.groupList[id];
         }
         catch (err) {
-            console.error("Error Deleting Group: " + err.message);
+            that.addAnnon(1, "Error Deleting Group: "+err.message);
         }
     };
     this.removeAllGroups = function () {
@@ -39,7 +39,7 @@ function page(par, id, title) {
             }
         }
         catch (err) {
-            console.error("Error Deleting Groups: " + err.message);
+            that.addAnnon(1, "Error Deleting Groups: "+err.message);
         }
     };
     this.drawPage = function (location) {
@@ -52,6 +52,7 @@ function page(par, id, title) {
         else {
             that.parent.drawSurface.append(that.stored);
         }
+
         $('#' + that.id).addClass(location + 'Slide');
         setTimeout(function () {
             $('#' + that.id).removeClass(location);

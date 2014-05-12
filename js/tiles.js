@@ -1,20 +1,21 @@
 /* Tile Object */
 
-function tile(parent, id, x, y, type) {
+function tile(parent, id, x, y, type, title, settings, filters) {
     this.id = id;
     this.parent = parent;
     this.type = type;
-    this.title = '';
+    this.title = title;
     this.size = [x, y];
     this.interactiveObject = false;
     this.source = this.parent.parent.parent.htmlStorage['tile_'+x+'x'+y+'_'+type];
-    this.filters = {};
-    this.settings = {};
+    this.filters = filters;
+    this.settings = settings;
 
     var that = this;
 
     this.initializeListeners = function() {
-        if ($(that.source).filter('script.saving_function').length > 0) {
+
+        if ($(that.source).filter('script.saving_function').length > 0) { //add custom functions
             that.parent.parent.parent.drawSurface.append($(that.source).filter('script.saving_function')[0]);
             that.privSaving = eval('tile_'+that.size[0]+'x'+that.size[1]+'_'+that.type+'_save');
         }
@@ -23,34 +24,23 @@ function tile(parent, id, x, y, type) {
             that.privDraw = eval('tile_'+that.size[0]+'x'+that.size[1]+'_'+that.type+'_draw');
         }
 
-        $('#'+that.parent.id).append("<div id='"+that.id+"' tile-type='"+that.type+"' class='tile tile_"+x+"x"+y+"'>");
-        if (that.source === undefined) {
+        $('#'+that.parent.id).append("<div id='"+that.id+"' tile-type='"+that.type+"' class='tile tile_"+x+"x"+y+"'>"); //create container and grab html
+        if (that.source === undefined) { //if we havn't loaded already, should never be called
             $.get('html/tile_'+x+'x'+y+'_'+type+'.html', function(result) {
                 that.source = result;
-
-                $('#'+that.id).append($(result).filter('.front, .back'));
-                $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
-
-                var innerWidth = $('#'+that.id).find('.title_area').outerWidth();
-                var width = $('#'+that.id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+that.id).find('button.setting_btn').outerWidth(true));
-
-                if (innerWidth > width) {
-                    $('#'+that.id).find('.title_area').css('width', width+'px');
-                    $('#'+that.id).find('.title_area > span').addClass('too_long');
-                }
-                that.privDraw();
             });
-        } else {
-            $('#'+that.id).append($(that.source).filter('.front, .back'));
-            $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
-            var innerWidth = $('#'+id).find('.title_area').outerWidth();
-            var width = $('#'+that.id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+that.id).find('button.setting_btn').outerWidth(true));
-            if (innerWidth > width) {
-                $('#'+that.id).find('.title_area').css('width', width+'px');
-                $('#'+that.id).find('.title_area > span').addClass('too_long');
-            }
-            that.privDraw();
         }
+
+        $('#'+that.id).append($(that.source).filter('.front, .back'));
+        $('#'+that.id+' .contents').attr('id', 'drawable_'+that.id);
+        $('#'+that.id+' .tile_title').text(that.title);
+        var innerWidth = $('#'+id).find('.title_area').outerWidth();
+        var width = $('#'+that.id).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+that.id).find('button.setting_btn').outerWidth(true));
+        if (innerWidth > width) {
+            $('#'+that.id).find('.title_area').css('width', width+'px');
+            $('#'+that.id).find('.title_area > span').addClass('too_long');
+        }
+        that.privDraw();
 
         $('#'+that.id).draggable({
             opacity: 0.35,
@@ -123,7 +113,7 @@ function tile(parent, id, x, y, type) {
         this.settings = settings;
     };
 
-    this.addTitle = function(title) {
+    this.setTitle = function(title) {
         this.title = title;
         toggleMarquee(that.id);
     };

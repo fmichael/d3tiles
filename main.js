@@ -22,6 +22,40 @@ function getSev(num) {
     }
 }
 
+function makeChartObj(chart, settings, filters) {
+    var stuff = {};
+    if("data" in chart) {
+        stuff.data = {columns: chart.data};
+    }
+    if("legend" in settings) {
+        stuff.legend = {show: settings.legend};
+    }
+    if("size" in chart) {
+        stuff.size = {width: chart.size[0], height: chart.size[1]};
+    }
+    if("bindto" in chart) {
+        stuff.bindto = chart.bindto;
+    }
+    if("type" in settings) {
+        stuff.data.type = settings.type;
+    }
+    if("subchart" in settings) {
+        stuff.subchart = {show: settings.subchart};
+    }
+    if("zoom" in settings) {
+        stuff.zoom = {enabled: settings.zoom};
+    }
+    if("min" in filters && "max" in filters) {
+        stuff.axis = {
+            y: {
+                max: parseInt(filters.max, 10),
+                min: parseInt(filters.min, 10),
+            }
+        };
+    }
+    return stuff;
+}
+
 function toggleMarquee(obj) {
     var innerWidth = $('#'+obj).find('.title_area').outerWidth();
     var width = $('#'+obj).find('.setting_span').outerWidth(true) - 6 - (2 * $('#'+obj).find('button.setting_btn').outerWidth(true));

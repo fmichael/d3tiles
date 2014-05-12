@@ -21,9 +21,14 @@ function screen(surf, baseTiles) {
     this.htmlStorage = {};
 
     this.addPage = function(id, title) {
+        that.addAnnon(5, 'Added new Page: '+title);
         that.pageList[id] = new page(that, id, title);
-        $('.dashDock .container').css('width', ($('.container > button').length+1) * $('#addAPage').outerWidth(true));
-        $('.dashDock .container').append("<button page-id='"+id+"' class='pageButton' >"+title+"</button>");
+        $('.dashDock .container').css('width', ($('.container > li').length+1) * $('#addAPage').outerWidth(true));
+        $('.dashDock .container').append("<li page-id='"+id+"' class='pageButton' >"+title+"</li>");
+        if ($('.container > li').length === 2) { //if first page
+            that.changeToPage(id);
+
+        }
     };
 
     this.removePage = function(id) {
@@ -37,7 +42,7 @@ function screen(surf, baseTiles) {
             delete that.pageList[id];
         }
         catch(err) {
-            console.error("Error Deleting Page: "+err.message);
+            that.addAnnon(1, "Error Deleting Page: "+err.message);
         }
     };
 
@@ -54,12 +59,15 @@ function screen(surf, baseTiles) {
             }
         }
         catch(err) {
-            console.error("Error Deleting Pages: "+err.message);
+            that.addAnnon(1, "Error Deleting Pages: "+err.message);
         }
     };
 
     this.changeToPage = function(id) {
         if (typeof that.pageList[id] != "undefined" && that.activePage != id) {
+            $('.pageButton').removeClass('current');
+            $('.pageButton[page-id="'+id+'"]').addClass('current');
+
             //if first page:
             var slideIn = '';
             var slideOut = '';
@@ -158,7 +166,7 @@ function screen(surf, baseTiles) {
                 that.collapseNotifBar(true);
         }
         catch (err) {
-            console.error("Error Deleting Notification: "+err.message);
+            that.addAnnon(1, "Error Deleting Notification: "+err.message);
         }
     };
 
@@ -250,7 +258,7 @@ function screen(surf, baseTiles) {
                 });
             }
             catch(err) {
-                console.error("Failed to Load Page: "+err.message);
+                that.addAnnon(1, "Failed to load Page: "+err.message);
             }
         }
         else {
@@ -378,7 +386,9 @@ function screen(surf, baseTiles) {
                                 '<input id="notifToggle" type="button" value="Expand" />'+
                             '</div>');
     this.drawSurface.append('<div class="tileDock">'+this.createTileList(this.availableBaseTiles)+'</div>');
-    this.drawSurface.append('<div class="dashDock"><div class="container"><button id="addAPage">+</button></div></div>');
+    this.drawSurface.append('<div class="dashDock"><ul class="container"><li id="addAPage">+</li></ul></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
     this.drawSurface.css('height', ($(document).height())+'px');
+
+    $('.dashDock .container').sortable({scroll: false, items: '> li:not(#addAPage)'});
 }
