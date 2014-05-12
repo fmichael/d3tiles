@@ -35,7 +35,7 @@ function group(par, id) {
             }
         }
         catch (err) {
-            console.error("Error Deleting Tiles: " + err.message);
+            that.parent.addAnnon(1, "Error Deleting Tiles: "+err.message);
         }
     };
 
@@ -45,7 +45,7 @@ function group(par, id) {
             delete that.tileList[id];
         }
         catch (err) {
-            console.error("Error Deleting Tile: " + err.message);
+            that.parent.addAnnon(1, "Error Deleting Tile: "+err.message);
         }
     };
     this.drawGroup = function () {

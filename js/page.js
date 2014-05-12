@@ -56,7 +56,6 @@ function page(par, id, title) {
         $('#' + that.id).addClass(location + 'Slide');
         setTimeout(function () {
             var dir = new RegExp("float.*").exec($('#' + that.id).attr('class'))[0];
-            console.log(dir);
             $('#' + that.id).removeClass(dir);
             $('#' + that.id).removeClass(dir + 'Slide');
         }, 300);
