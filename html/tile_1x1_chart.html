@@ -45,13 +45,17 @@
         <button class="confirmButton">Confirm</button>
     </div>
     <script> /* Validation Code, Confirmation Code, etc */
+        var data = makeData('chart');
         $('.confirmButton').on('click', function() {
             if($('.form > .title > input').val() == '') {
                 $('.form > .title > input').addClass('error');
+                $('.form > .title > input').attr('placeholder', 'Please Fill in');
                 return;
             }
-            else
+            else {
                 $('.form > .title > input').removeClass('error');
+                $('.form > .title > input').attr('placeholder', '');
+            }
 
             var filters = {};
             var settings = {};
@@ -60,7 +64,7 @@
             settings.legend = $('input[setFilt="legend"]').is(":checked");
 
             var groupid = viewable.pageList[viewable.activePage].addGroup('group_'+viewable.activePage);
-            viewable.pageList[viewable.activePage].groupList[groupid].addData(makeData('chart'));
+            viewable.pageList[viewable.activePage].groupList[groupid].addData(data);
             var tileid = viewable.pageList[viewable.activePage].groupList[groupid].addTile('tile_', 1, 1, 'chart', $('.form > .title > input').val(), settings, filters);
             viewable.closeModal('floatRightSlide');
         });
