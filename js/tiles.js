@@ -217,10 +217,11 @@ function tile(parent, id, x, y, type) {
                     }
                 };
             }
+            console.log(stuff);
             stuff.data.groups = [['data1', 'blablablabla', 'data3']];
-            if (that.chart !== false)
-                that.chart.load(stuff);
-            else
+            //if (that.chart !== false)
+            //    that.chart.load(stuff);
+            //else
                 that.chart = c3.generate(stuff);
         }
     };
