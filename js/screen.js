@@ -17,9 +17,9 @@ function screen(surf, baseTiles) {
     this.settBool = false;
 
     this.dragging = false; //if we are moving a tile
-    this.modalOpen = false;
-    this.changePage = false;
-    this.htmlStorage = {};
+    this.modalOpen = false; //if modal open
+    this.changePage = false; //if changing page
+    this.htmlStorage = {}; //storage of all forms/tile constructs
 
     this.addPage = function(id, title) {
         that.addAnnon(5, 'Added new Page: '+title);
@@ -28,18 +28,19 @@ function screen(surf, baseTiles) {
         $('.dashDock .container').append("<li page-id='"+id+"' class='pageButton' >"+title+"</li>");
         if ($('.container > li').length === 2) { //if first page
             that.changeToPage(id);
-
         }
     };
 
     this.removePage = function(id) {
         try {
-            if (Object.size(that.pageList[id].groupList) !== 0)
+            if (Object.size(that.pageList[id].groupList) !== 0) {
                 that.pageList[id].removeAllGroups();
+            }
             $('#'+that.pageList[id].id).remove();
             $('.pageButton[page-id="'+that.pageList[id].id+'"]').remove();
-            if (that.activePage == that.pageList[id].id)
+            if (that.activePage == that.pageList[id].id) {
                 that.activePage = '';
+            }
             delete that.pageList[id];
         }
         catch(err) {
@@ -50,12 +51,14 @@ function screen(surf, baseTiles) {
     this.removeAllPages = function() {
         try {
             for(var iter in that.pageList) {
-                if (Object.size(that.pageList[iter].groupList) !== 0)
+                if (Object.size(that.pageList[iter].groupList) !== 0) {
                     that.pageList[iter].removeAllGroups();
+                }
                 $('#'+that.pageList[iter].id).remove();
                 $('.pageButton[page-id="'+that.pageList[iter].id+'"]').remove();
-                if (that.activePage == that.pageList[iter].id)
+                if (that.activePage == that.pageList[iter].id) {
                     that.activePage = '';
+                }
                 delete that.pageList[iter];
             }
         }
@@ -72,7 +75,7 @@ function screen(surf, baseTiles) {
             //if first page:
             var slideIn = '';
             var slideOut = '';
-            if(that.activePage === '') {
+            if (that.activePage === '') {
                 slideIn = 'floatTop';
                 that.pageList[id].drawPage(slideIn);
                 that.activePage = id;
@@ -97,12 +100,13 @@ function screen(surf, baseTiles) {
                 }, 750);
             }
         }
-        else
+        else {
             that.changePage = false;
+        }
     };
 
     this.showNotifBar = function(autoclose) {
-        if(!that.menuOpen && $('.notifArea').children().length > 0 && !that.dragging)
+        if (!that.menuOpen && $('.notifArea').children().length > 0 && !that.dragging)
         {
             that.menuOpen = true;
             $('.notifBar').animate({
@@ -111,14 +115,14 @@ function screen(surf, baseTiles) {
                 that.menuOpen = false;
             });
         }
-        if(typeof autoclose != "undefined" && autoclose && !that.notiBool) {
+        if (typeof autoclose != "undefined" && autoclose && !that.notiBool) {
             setTimeout(function(){
                 that.hideNotifBar();
             }, 5000); //5 seconds, then close notif
         }
     };
     this.hideNotifBar = function() {
-        if(!that.menuOpen && !that.notiBool)
+        if (!that.menuOpen && !that.notiBool)
         {
             that.menuOpen = true;
             $('.notifBar').animate({
@@ -129,7 +133,7 @@ function screen(surf, baseTiles) {
         }
     };
     this.expandNotifBar = function() {
-        if(!that.menuOpen)
+        if (!that.menuOpen)
         {
             that.menuOpen = true;
             that.notiBool = true;
@@ -142,7 +146,7 @@ function screen(surf, baseTiles) {
         }
     };
     this.collapseNotifBar = function(closeAfter) {
-        if(!that.menuOpen)
+        if (!that.menuOpen)
         {
             that.menuOpen = true;
             that.notiBool = false;
@@ -151,8 +155,9 @@ function screen(surf, baseTiles) {
                 height: 50
             }, 200, function(){
                 that.menuOpen = false;
-                if(closeAfter)
+                if (closeAfter) {
                     that.hideNotifBar();
+                }
             });
         }
     };
@@ -166,8 +171,9 @@ function screen(surf, baseTiles) {
     this.removeAnnon = function(annon) {
         try {
             annon.remove();
-            if($('.notifArea').children().length === 0)
+            if ($('.notifArea').children().length === 0) {
                 that.collapseNotifBar(true);
+            }
         }
         catch (err) {
             that.addAnnon(1, "Error Deleting Notification: "+err.message);
@@ -175,7 +181,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showTileDock = function() {
-        if(!that.tileBool && !that.modalOpen && !that.dragging && that.activePage !== '')
+        if (!that.tileBool && !that.modalOpen && !that.dragging && that.activePage !== '')
         {
             that.tileBool = true;
             $('.tileDock').animate({
@@ -186,7 +192,7 @@ function screen(surf, baseTiles) {
         }
     };
     this.hideTileDock = function() {
-        if(!that.tileBool)
+        if (!that.tileBool)
         {
             that.tileBool = true;
             $('.tileDock').animate({
@@ -198,7 +204,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showDashDock = function() {
-        if(!that.dashBool && !that.modalOpen && !that.dragging)
+        if (!that.dashBool && !that.modalOpen && !that.dragging)
         {
             that.dashBool = true;
             $('.dashDock').animate({
@@ -209,7 +215,7 @@ function screen(surf, baseTiles) {
         }
     };
     this.hideDashDock = function() {
-        if(!that.dashBool)
+        if (!that.dashBool)
         {
             that.dashBool = true;
             $('.dashDock').animate({
@@ -221,7 +227,7 @@ function screen(surf, baseTiles) {
     };
 
     this.showSettingDock = function() {
-        if(!that.settBool && !that.modalOpen && !that.dragging)
+        if (!that.settBool && !that.modalOpen && !that.dragging)
         {
             that.settBool = true;
             $('.topButtons').addClass('in');
@@ -235,7 +241,7 @@ function screen(surf, baseTiles) {
     };
 
     this.hideSettingDock = function() {
-        if(!that.settBool)
+        if (!that.settBool)
         {
             that.settBool = true;
             $('.topButtons').removeClass('in');
@@ -254,14 +260,14 @@ function screen(surf, baseTiles) {
         that.hideDashDock();
         that.hideTileDock();
         that.drawSurface.append('<div class="modalBack opacityFade"></div>');
-        if(that.htmlStorage[file+extra] === undefined) {
+        if (that.htmlStorage[file+extra] === undefined) {
             try {
                 $.get('html/'+file+extra+'.html', function(result) { //may be a tile or modal, etc
                     that.htmlStorage[file+extra] = result;
                     that.privOpenModal($(result).filter('.modal')); //store obj so we don't fetch again
                 });
             }
-            catch(err) {
+            catch (err) {
                 that.addAnnon(1, "Failed to load Page: "+err.message);
             }
         }
@@ -297,7 +303,7 @@ function screen(surf, baseTiles) {
 
     this.createTileList = function(list) {
         var html = '';
-        for(var iter in list) {
+        for (var iter in list) {
             html += '<div class="miniTile background_'+list[iter].type+'" tile-url="'+list[iter].size+'_'+list[iter].type+'">'+
                 '<span class="miniTileSize">'+list[iter].size+'</span>'+
             '</div>';
@@ -307,7 +313,7 @@ function screen(surf, baseTiles) {
 
     this.drawSurface.on("mouseleave", 'div.notifBar', function() {
         setTimeout(function(){
-            if(!that.notiBool && !$('div.notifBar').is(":hover"))
+            if (!that.notiBool && !$('div.notifBar').is(":hover"))
                     that.hideNotifBar();
         }, 1000);
     });
@@ -332,10 +338,12 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('click', '#notifToggle', function(){
-        if (!that.notiBool)
+        if (!that.notiBool) {
             that.expandNotifBar();
-        else
+        }
+        else {
             that.collapseNotifBar();
+        }
     });
 
     this.drawSurface.on('click', '#addAPage', function(){
@@ -348,7 +356,7 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('click', '.pageButton', function(){
-        if(!that.changePage) {
+        if (!that.changePage) {
             that.changePage = true;
             that.changeToPage($(this).attr('page-id'));
         }
@@ -359,8 +367,9 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('keyup', '.form input', function(e) {
-        if(e.keyCode == 13)
+        if (e.keyCode == 13) {
             $('.confirmButton').trigger('click');
+        }
     });
 
     this.drawSurface.on('mousemove', function(e) {
@@ -371,19 +380,19 @@ function screen(surf, baseTiles) {
             that.showSettingDock();
         }
 
-        if(that.mouseX > that.midWidth && that.mouseX < that.midWidth + 400)
-        {
-            if(that.mouseY > that.height - 15)
+        if (that.mouseX > that.midWidth && that.mouseX < that.midWidth + 400) {
+            if (that.mouseY > that.height - 15) {
                 that.showDashDock();
-
-            else if(that.mouseY <= 15)
+            }
+            else if (that.mouseY <= 15) {
                 that.showNotifBar();
+            }
         }
 
-        if(that.mouseY > that.midHeight && that.mouseY < that.midHeight + 400)
-        {
-            if(that.mouseX <= 15)
+        if (that.mouseY > that.midHeight && that.mouseY < that.midHeight + 400) {
+            if (that.mouseX <= 15) {
                 that.showTileDock();
+            }
         }
     });
 

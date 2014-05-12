@@ -75,10 +75,12 @@ function tile(parent, id, x, y, type, title, settings, filters) {
                     if ($(thee).parent().parent().hasClass('front')) {
                         $(thee).parent().parent('.front').addClass('flipped');
                         $(thee).parent().parent().siblings('.back').addClass('flipped');
-                        if ($(thee).hasClass('fill_btn'))
+                        if ($(thee).hasClass('fill_btn')) {
                             $(thee).parent().parent().siblings('.back').addClass('filters');
-                        else
+                        }
+                        else {
                             $(thee).parent().parent().siblings('.back').removeClass('filters');
+                        }
                     }
                     else {
                         $(thee).parent().parent('.back').removeClass('flipped');
@@ -87,8 +89,9 @@ function tile(parent, id, x, y, type, title, settings, filters) {
                 }, 300);
                 setTimeout(function() {
                     $(thee).closest('.tile').removeClass('flipping');
-                    if($(thee).hasClass('save_btn'))
+                    if ($(thee).hasClass('save_btn')) {
                         that.privDraw();
+                    }
                 }, 400);
             }
         });
@@ -132,7 +135,7 @@ function tile(parent, id, x, y, type, title, settings, filters) {
         //create default function? shouldn't ever be used tho
     };
 
-    if(that.parent.parent.parent.activePage == that.parent.parent.id) { //if adding tile to current page
+    if (that.parent.parent.parent.activePage == that.parent.parent.id) { //if adding tile to current page
         that.initializeListeners();
     }
 }
