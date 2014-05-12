@@ -18,6 +18,7 @@ function screen(surf, baseTiles) {
 
     this.dragging = false; //if we are moving a tile
     this.modalOpen = false;
+    this.changePage = false;
     this.htmlStorage = {};
 
     this.addPage = function(id, title) {
@@ -80,11 +81,11 @@ function screen(surf, baseTiles) {
                 var newPage = $('.pageButton[page-id="'+id+'"').position().left;
                 var oldPage = $('.pageButton[page-id="'+that.activePage+'"').position().left;
                 if (newPage < oldPage) { //if sliding new from right
-                    slideIn = 'floatRightSlide';
+                    slideIn = 'floatRight';
                     slideOut = 'floatLeftSlide';
                 }
                 else { //if sliding new from left
-                    slideIn = 'floatLeftSlide';
+                    slideIn = 'floatLeft';
                     slideOut = 'floatRightSlide';
                 }
                 that.pageList[id].drawPage(slideIn);
@@ -92,9 +93,12 @@ function screen(surf, baseTiles) {
                 setTimeout(function() {
                     that.pageList[that.activePage].stored = $('#'+that.pageList[that.activePage].id).detach();
                     that.activePage = id;
+                    that.changePage = false;
                 }, 750);
             }
         }
+        else
+            that.changePage = false;
     };
 
     this.showNotifBar = function(autoclose) {
@@ -344,7 +348,10 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('click', '.pageButton', function(){
-        that.changeToPage($(this).attr('page-id'));
+        if(!that.changePage) {
+            that.changePage = true;
+            that.changeToPage($(this).attr('page-id'));
+        }
     });
 
     this.drawSurface.on('click', '.close_anon', function() {
