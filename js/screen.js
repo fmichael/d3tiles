@@ -19,7 +19,6 @@ function screen(surf, baseTiles) {
     this.dragging = false; //if we are moving a tile
     this.modalOpen = false;
     this.htmlStorage = {};
-    this.tileStorage = {};
 
     this.addPage = function(id, title) {
         that.pageList[id] = new page(that, id, title);
@@ -254,8 +253,9 @@ function screen(surf, baseTiles) {
                 console.error("Failed to Load Page: "+err.message);
             }
         }
-        else
+        else {
             that.privOpenModal($(that.htmlStorage[file+extra]).filter('.modal'));
+        }
     };
 
     this.privOpenModal = function(obj) {

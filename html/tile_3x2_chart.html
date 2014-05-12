@@ -58,3 +58,110 @@
         });
     </script>
 </div>
+
+<script class='saving_function'>
+    function tile_3x2_chart_save() {
+        var thee = this;
+        $('#'+this.id).find('.contents').children().each(function() {
+            var which = 'settings';
+            if ($(this).hasClass('settings'))
+                which = 'settings';
+            else if ($(this).hasClass('filter'))
+                which = 'filters';
+
+            $(this).children().each(function() {
+                var value = false;
+                var found = false;
+                //grab each setting
+                if ($(this).context.localName == 'input') {
+                    switch($(this).attr('type')) {
+                        case 'checkbox':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'radio':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'text':
+                        case 'number':
+                        case 'range':
+                        case 'input':
+                            if($(this).val() !== '')
+                                value = $(this).val();
+                        break;
+                    }
+                    found = true;
+                }
+                else if ($(this).context.localName == 'textarea') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                else if ($(this).context.localName == 'select') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                if (found) {
+                    if (which == 'settings')
+                        thee.settings[$(this).attr('setFilt')] = value;
+                    else
+                        thee.filters[$(this).attr('setFilt')] = value;
+                }
+            });
+        });
+    }
+
+</script>
+
+<script class='drawing_function'>
+    function tile_3x2_chart_draw() {
+        var settings = mergeObjects(this.settings, this.parent.settings);
+        var filters = mergeObjects(this.filters, this.parent.filters);
+        var chart = {};
+        chart.bindto = '#drawable_'+this.id;
+        chart.type = 'area';
+        chart.size = [150 * this.size[0], 150 * this.size[1]];
+        chart.data = this.parent.data;
+
+        var stuff = {};
+        if("data" in chart) {
+            stuff.data = {columns: chart.data};
+        }
+        if("legend" in settings) {
+            stuff.legend = {show: settings.legend};
+        }
+        if("size" in chart) {
+            stuff.size = {width: chart.size[0], height: chart.size[1]};
+        }
+        if("bindto" in chart) {
+            stuff.bindto = chart.bindto;
+        }
+        if("type" in settings) {
+            stuff.data.type = settings.type;
+        }
+        if("subchart" in settings) {
+            stuff.subchart = {show: settings.subchart};
+        }
+        if("zoom" in settings) {
+            stuff.zoom = {enabled: settings.zoom};
+        }
+        if("min" in filters && "max" in filters) {
+            stuff.axis = {
+                y: {
+                    max: parseInt(filters.max, 10),
+                    min: parseInt(filters.min, 10),
+                }
+            };
+        }
+
+        this.interactiveObject = c3.generate(stuff);
+    }
+</script>

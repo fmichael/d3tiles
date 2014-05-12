@@ -55,3 +55,111 @@
         });
     </script>
 </div>
+
+<script class='saving_function'>
+    function tile_1x1_number_save() {
+        var thee = this;
+
+        if(this.type == 'chart' || this.type == 'table' || this.type == 'number') {
+            $(this).closest('.back').find('.contents').children().each(function() {
+                var which = 'settings';
+                if ($(this).hasClass('settings'))
+                    which = 'settings';
+                else if ($(this).hasClass('filter'))
+                    which = 'filters';
+
+                $(this).children().each(function() {
+                    var value = false;
+                    var found = false;
+                    //grab each setting
+                    if ($(this).context.localName == 'input') {
+                        switch($(this).attr('type')) {
+                            case 'checkbox':
+                                if($(this).is(":checked"))
+                                    value = true;
+                                else
+                                    value = false;
+                            break;
+                            case 'radio':
+                                if($(this).is(":checked"))
+                                    value = true;
+                                else
+                                    value = false;
+                            break;
+                            case 'text':
+                            case 'number':
+                            case 'range':
+                            case 'input':
+                                if($(this).val() !== '')
+                                    value = $(this).val();
+                            break;
+                        }
+                        found = true;
+                    }
+                    else if ($(this).context.localName == 'textarea') {
+                        if($(this).val() !== '') {
+                            value = $(this).val();
+                            found = true;
+                        }
+                    }
+                    else if ($(this).context.localName == 'select') {
+                        if($(this).val() !== '') {
+                            value = $(this).val();
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        if (which == 'settings')
+                            thee.settings[$(this).attr('setFilt')] = value;
+                        else
+                            thee.filters[$(this).attr('setFilt')] = value;
+                    }
+                });
+            });
+            //no need to re-draw since redrawn once flipped back over
+        }
+    }
+</script>
+
+<script class='drawing_function'>
+    function tile_1x1_number_draw() {
+        var num = 0;
+        var str = (this.settings.label == undefined) ? '' : this.settings.label;
+        var type = (this.settings.type == undefined) ? 'count' : this.settings.type;
+        if(typeof this.parent.data == 'number') { //a single data value was returned
+            num = this.parent.data;
+        }
+        else {
+            switch(type) {
+                case 'count':
+                    num = this.parent.data.length;
+                    break;
+                case 'sum':
+                    for(var x in this.parent.data)
+                        num += this.parent.data[x];
+                    break;
+                case 'min':
+                    num = this.parent.data[0];
+                    for(var x in this.parent.data)
+                        if(num > this.parent.data[x])
+                            num = this.parent.data[x];
+                    break;
+                case 'max':
+                    num = this.parent.data[0];
+                    for(var x in this.parent.data)
+                        if(num < this.parent.data[x])
+                            num = this.parent.data[x];
+                    break;
+                case 'average':
+                    var ttl = this.parent.data.length;
+                    for(var x in this.parent.data)
+                        num += this.parent.data[x];
+                    num = parseFloat((num / ttl).toFixed(2));
+            }
+        }
+        //output to boxy box
+        $('#drawable_'+this.id).empty();
+        this.interactiveObject = '<span class="number">'+num+'</span><span class="label">'+str+'</span';
+        $('#drawable_'+this.id).append(this.interactiveObject);
+    }
+</script>

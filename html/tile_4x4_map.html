@@ -46,3 +46,82 @@
         });
     </script>
 </div>
+
+<script class='saving_function'>
+    function tile_4x4_map_save() {
+        var thee = this;
+        $('#'+this.id).find('.contents').children().each(function() {
+            var which = 'settings';
+            if ($(this).hasClass('settings'))
+                which = 'settings';
+            else if ($(this).hasClass('filter'))
+                which = 'filters';
+
+            $(this).children().each(function() {
+                var value = false;
+                var found = false;
+                //grab each setting
+                if ($(this).context.localName == 'input') {
+                    switch($(this).attr('type')) {
+                        case 'checkbox':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'radio':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'text':
+                        case 'number':
+                        case 'range':
+                        case 'input':
+                            if($(this).val() !== '')
+                                value = $(this).val();
+                        break;
+                    }
+                    found = true;
+                }
+                else if ($(this).context.localName == 'textarea') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                else if ($(this).context.localName == 'select') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                if (found) {
+                    if (which == 'settings')
+                        thee.settings[$(this).attr('setFilt')] = value;
+                    else
+                        thee.filters[$(this).attr('setFilt')] = value;
+                }
+            });
+        });
+    }
+
+</script>
+
+<script class='drawing_function'>
+    function tile_4x4_map_draw() {
+        if (this.interactiveObject !== false) {
+                this.interactiveObject.remove(); //remove map to re-draw if needed (options may have changed, etc)
+            }
+
+        this.interactiveObject = L.map('drawable_'+this.id, {
+            /*layers: MQ.mapLayer(), *///leaflet + mapquest free map_tiles
+            center: [ 40.731701, -73.993411 ],
+            zoom: 12
+        });
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { //osm tile layer
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+        }).addTo(this.interactiveObject);
+    }
+</script>

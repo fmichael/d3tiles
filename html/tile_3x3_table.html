@@ -46,7 +46,7 @@
         <button class="confirmButton">Confirm</button>
     </div>
     <script> /* Validation Code, Confirmation Code, etc */
-        $('.confirmButton').on('click', function() {
+        $('.confirmButton').on('click', function() { //no need for specific names since only one modal is allowed at a time on screen
             if($('.form > .title > input').val() == '') {
                 $('.form > .title > input').addClass('error');
                 return;
@@ -60,3 +60,96 @@
         });
     </script>
 </div>
+
+<script class='saving_function'>
+    function tile_3x3_table_save() {
+        var thee = this;
+        $('#'+this.id).find('.contents').children().each(function() {
+            var which = 'settings';
+            if ($(this).hasClass('settings'))
+                which = 'settings';
+            else if ($(this).hasClass('filter'))
+                which = 'filters';
+
+            $(this).children().each(function() {
+                var value = false;
+                var found = false;
+                //grab each setting
+                if ($(this).context.localName == 'input') {
+                    switch($(this).attr('type')) {
+                        case 'checkbox':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'radio':
+                            if($(this).is(":checked"))
+                                value = true;
+                            else
+                                value = false;
+                        break;
+                        case 'text':
+                        case 'number':
+                        case 'range':
+                        case 'input':
+                            if($(this).val() !== '')
+                                value = $(this).val();
+                        break;
+                    }
+                    found = true;
+                }
+                else if ($(this).context.localName == 'textarea') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                else if ($(this).context.localName == 'select') {
+                    if($(this).val() !== '') {
+                        value = $(this).val();
+                        found = true;
+                    }
+                }
+                if (found) {
+                    if (which == 'settings')
+                        thee.settings[$(this).attr('setFilt')] = value;
+                    else
+                        thee.filters[$(this).attr('setFilt')] = value;
+                }
+            });
+        });
+    }
+
+</script>
+
+<script class='drawing_function'>
+    function tile_3x3_table_draw() {
+        $('#drawable_'+this.id).empty();
+        var appender = '<div class="table_cont"><table id="table_'+this.id+'" class="table table-bordered"><thead>';
+        var objects = [];
+        var length = 0;
+        for(var iter in this.parent.data) {
+            appender += '<th>'+iter+'</th>';
+            length = this.parent.data[iter].length;
+        }
+        appender += '</thead><tbody>';
+
+        for(var x = 0; x < length; x++) {
+            objects[x]= {};
+        }
+        for(var iter in this.parent.data) {
+            for(var iteriter in this.parent.data[iter]) {
+                objects[iteriter][iter] = this.parent.data[iter][iteriter];
+            }
+        }
+        appender += '</tbody></table></div>';
+        $('#drawable_'+this.id).append(appender);
+        this.interactiveObject = $('#table_'+this.id).dynatable({
+            features: this.settings,
+            dataset: {
+                records: objects
+            }
+        });
+    }
+</script>
