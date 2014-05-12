@@ -350,6 +350,11 @@ function screen(surf, baseTiles) {
         that.removeAnnon($(this).parent());
     });
 
+    this.drawSurface.on('keyup', '.form input', function(e) {
+        if(e.keyCode == 13)
+            $('.confirmButton').trigger('click');
+    });
+
     this.drawSurface.on('mousemove', function(e) {
         that.mouseX = e.clientX;
         that.mouseY = e.clientY;
