@@ -269,6 +269,7 @@ function screen(surf, baseTiles) {
     this.privOpenModal = function(obj) {
         that.drawSurface.append(obj);
         var direction = new RegExp("float.*Slide").exec($('.modal').attr('class'))[0];
+        $('input[type=text]').filter(':visible:first').focus();
         setTimeout(function() {
             $('.modalBack').css('opacity', 1);
             $('.modal.'+direction).removeClass(direction);
