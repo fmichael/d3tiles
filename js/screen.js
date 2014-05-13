@@ -80,8 +80,8 @@ function screen(surf, baseTiles) {
                 that.activePage = id;
             }
             else {
-                var newPage = $('.pageButton[page-id="'+id+'"').position().left;
-                var oldPage = $('.pageButton[page-id="'+that.activePage+'"').position().left;
+                var newPage = $('.pageButton[page-id="'+id+'"]').position().left;
+                var oldPage = $('.pageButton[page-id="'+that.activePage+'"]').position().left;
                 if (newPage < oldPage) { //if sliding new from right
                     slideIn = 'floatRight';
                     slideOut = 'floatLeftSlide';
