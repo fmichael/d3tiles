@@ -16,6 +16,12 @@ button:hover {
     cursor: pointer;
 }
 
+body {
+    background: url(img/bg2.jpg);
+    margin:0;
+    overflow:hidden;
+}
+
 .notifBar, .tileDock, .dashDock, .topButtons {
 	position: fixed;
 	z-index: 1000000;
@@ -41,6 +47,64 @@ button:hover {
 }
 #notifCollapse {
 	display: none;
+}
+
+.loadBar {
+    position: absolute;
+    left: 30%;
+    top: 35%;
+    width: 40%;
+    height: 150px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    opacity: 0;
+    display: none;
+    -webkit-transition: opacity .6s ease;
+    transition: opacity .6s ease;
+}
+
+.loadCon {
+    position: absolute;
+    left: 19%;
+    top: 43%;
+    width: 60%;
+    height: 25px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.load {
+    width: 0%;
+    height: 100%;
+    float: left;
+    background: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-color: #428bca;
+    animation: loading 2s linear infinite;
+    -webkit-animation: loading 2s linear infinite;
+    -moz-animation: loading 2s linear infinite;
+    background-size: 40px 40px;
+    -webkit-transition: width .6s ease;
+    transition: width .6s ease;
+}
+
+.loadingText {
+    position:absolute;
+    left: 43%;
+    top: 41px;
+    font-size: 20px;
+}
+
+@keyframes loading {
+    0% {background-position:0 -40px;}
+    100% {background-position: 0 0;}
+}
+
+@-webkit-keyframes loading {
+    0% {background-position:0 -40px;}
+    100% {background-position: 0 0;}
 }
 
 .topButtons {

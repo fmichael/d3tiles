@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
         <link href="c3.css" media="all" rel="stylesheet" type="text/css" />
         <link href="tiles.css" media="all" rel="stylesheet" type="text/css" />
         <link href="main.css" media="all" rel="stylesheet" type="text/css" />
@@ -24,7 +25,7 @@
 
         <title>D3 - C3 - Tiling</title>
     </head>
-    <body style='background:lavender;margin:0;overflow:hidden'>
+    <body>
         <div id="tileable"></div>
     </body>
 </html>

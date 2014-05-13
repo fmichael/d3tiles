@@ -253,6 +253,28 @@ function screen(surf, baseTiles) {
         }
     };
 
+    this.addLoading = function() {
+        $('.loadBar').addClass('visible');
+        setTimeout(function() {
+            $('.loadBar').css('opacity', 1);
+        }, 250);
+    };
+
+    this.setLoadingWidth = function(num) {
+        if(num > 100) {
+            num = num / 100;
+        }
+        $('.load').css('width', num+'%');
+    };
+
+    this.removeLoading = function() {
+        $('.loadBar').css('opacity', 0);
+        setTimeout(function() {
+            $('.load').css('width', 0);
+            $('.loadBar').removeClass('visible');
+        }, 250);
+    };
+
     this.addModal = function(file, extra) {
         that.modalOpen = true;
         extra = (extra === undefined) ? '' : '_'+extra;
@@ -346,6 +368,7 @@ function screen(surf, baseTiles) {
     });
 
     this.drawSurface.on('click', '#addAPage', function(){
+        that.addLoading();
         var id = 'page_'+(++that.counter);
         that.addModal('pageForm');
     });
@@ -408,6 +431,7 @@ function screen(surf, baseTiles) {
                             '</div>');
     this.drawSurface.append('<div class="tileDock">'+this.createTileList(this.availableBaseTiles)+'</div>');
     this.drawSurface.append('<div class="dashDock"><ul class="container"><li id="addAPage">+</li></ul></div>');
+    this.drawSurface.append('<div class="loadBar"><span class="loadingText">Loading...</span><div class="loadCon"><div class="load"></div></div></div>');
     this.drawSurface.append('<div class="garbage">TRASH</div>');
     this.drawSurface.css('height', ($(document).height())+'px');
 
