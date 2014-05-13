@@ -258,7 +258,7 @@ function screen(surf, baseTiles) {
         extra = (extra === undefined) ? '' : '_'+extra;
         that.hideDashDock();
         that.hideTileDock();
-        that.drawSurface.append('<div class="modalBack opacityFade"></div>');
+        that.drawSurface.append('<div class="modalBack opacityFade" style="height:'+that.drawSurface.height()+'px"></div>');
         if (that.htmlStorage[file+extra] === undefined) {
             try {
                 $.get('html/'+file+extra+'.html', function(result) { //may be a tile or modal, etc
